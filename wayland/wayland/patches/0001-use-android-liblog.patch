@@ -1,0 +1,72 @@
+From c6708047c6fdad3e08307f4687bfbb908dea53aa Mon Sep 17 00:00:00 2001
+From: yxj-github-437 <2457369732@qq.com>
+Date: Fri, 14 Mar 2025 00:22:06 +0800
+Subject: [PATCH] use android liblog.so
+
+---
+ src/connection.c   | 13 ++++++++++++-
+ src/wayland-util.c | 10 ++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/src/connection.c b/src/connection.c
+index 8870fd2..50d5fea 100644
+--- a/src/connection.c
++++ b/src/connection.c
+@@ -41,6 +41,11 @@
+ #include <time.h>
+ #include <ffi.h>
+ 
++#ifdef __ANDROID__
++# define LOG_TAG "wayland"
++# include <android/log.h>
++#endif
++
+ #include "wayland-util.h"
+ #include "wayland-private.h"
+ #include "wayland-os.h"
+@@ -1577,7 +1582,13 @@ wl_closure_print(struct wl_closure *closure, struct wl_object *target,
+ 	fprintf(f, ")\n");
+ 
+ 	if (fclose(f) == 0) {
+-		fprintf(stderr, "%s", buffer);
++#ifdef __ANDROID__
++		if (getenv("RUN_IN_ANDROID")) {
++			__android_log_write(ANDROID_LOG_DEBUG, LOG_TAG, buffer);
++		} else
++#endif
++		fwrite(buffer, buffer_length, 1, stderr);
++
+ 		free(buffer);
+ 	}
+ }
+diff --git a/src/wayland-util.c b/src/wayland-util.c
+index 7231346..8d80f6d 100644
+--- a/src/wayland-util.c
++++ b/src/wayland-util.c
+@@ -31,6 +31,11 @@
+ #include <string.h>
+ #include <stdarg.h>
+ 
++#ifdef __ANDROID__
++# include <android/log.h>
++# define LOG_TAG "wayland"
++#endif
++
+ #include "wayland-util.h"
+ #include "wayland-private.h"
+ 
+@@ -449,6 +454,11 @@ wl_map_for_each(struct wl_map *map, wl_iterator_func_t func, void *data)
+ static void
+ wl_log_stderr_handler(const char *fmt, va_list arg)
+ {
++#ifdef __ANDROID__
++	if (getenv("RUN_IN_ANDROID"))
++		__android_log_vprint(ANDROID_LOG_ERROR, LOG_TAG, fmt, arg);
++	else
++#endif
+ 	vfprintf(stderr, fmt, arg);
+ }
+ 
+-- 
+2.48.1.windows.1
+

@@ -1,0 +1,36 @@
+BasedOnStyle: LLVM
+---
+Language: Cpp
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 80
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+SortIncludes: Never
+SpaceBeforeParens: ControlStatements
+AllowAllArgumentsOnNextLine: false
+BinPackArguments: true
+BinPackParameters: true
+LambdaBodyIndentation: Signature
+LineEnding: DeriveLF
+SpaceBeforeAssignmentOperators: true
+PointerAlignment: Left
+IndentRequiresClause: true
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: Inner
+SpaceAfterTemplateKeyword: true
+SpacesInAngles: Never
+IndentAccessModifiers: false
+BreakConstructorInitializers: AfterColon
+PackConstructorInitializers: CurrentLine
+AlignArrayOfStructures: Left
+AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: true
+  AfterClass: false
+  AfterStruct: true
+  BeforeElse: true
+...

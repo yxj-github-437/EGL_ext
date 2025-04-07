@@ -3,7 +3,7 @@
 
 #include <system/window.h>
 #include <android/native_window.h>
-#include <stdatomic.h>
+#include <atomic>
 #include <EGL/egl.h>
 
 #define NO_ERROR (0)
@@ -84,7 +84,7 @@ class BaseNativeWindowBuffer : public ANativeWindowBuffer {
     ANativeWindowBuffer* getNativeBuffer() const;
 
   private:
-    _Atomic(uint32_t) refcount;
+    std::atomic_uint32_t refcount;
 };
 
 class BaseNativeWindow : public ANativeWindow {
@@ -118,7 +118,7 @@ class BaseNativeWindow : public ANativeWindow {
     virtual int setBufferCount(int cnt) = 0;
 
   private:
-    _Atomic(uint32_t) refcount;
+    std::atomic_uint32_t refcount;
 
     static int _query(const struct ANativeWindow* window, int what, int* value);
     static int _perform(struct ANativeWindow* window, int operation, ...);

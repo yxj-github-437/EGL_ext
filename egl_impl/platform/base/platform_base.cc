@@ -2,7 +2,6 @@
 #include "logger.h"
 
 #include <sync/sync.h>
-#include <stdatomic.h>
 
 #define container_of(ptr, type, member)                                        \
     ({                                                                         \
@@ -17,14 +16,14 @@ BaseNativeWindowBuffer::BaseNativeWindowBuffer()
             container_of(base, ANativeWindowBuffer, common);
         auto buffer = static_cast<BaseNativeWindowBuffer*>(self);
 
-        atomic_fetch_add(&buffer->refcount, 1);
+        buffer->refcount++;
     };
     common.decRef = +[](struct android_native_base_t* base) {
         ANativeWindowBuffer* self =
             container_of(base, ANativeWindowBuffer, common);
         auto buffer = static_cast<BaseNativeWindowBuffer*>(self);
 
-        if (atomic_fetch_sub(&buffer->refcount, 1) == 1)
+        if (buffer->refcount-- == 1)
         {
             delete buffer;
         }
@@ -60,13 +59,13 @@ BaseNativeWindow::BaseNativeWindow()
         ANativeWindow* self = container_of(base, ANativeWindow, common);
         auto window = static_cast<BaseNativeWindow*>(self);
 
-        atomic_fetch_add(&window->refcount, 1);
+        window->refcount++;
     };
     common.decRef = +[](struct android_native_base_t* base) {
         ANativeWindow* self = container_of(base, ANativeWindow, common);
         auto window = static_cast<BaseNativeWindow*>(self);
 
-        if (atomic_fetch_sub(&window->refcount, 1) == 1)
+        if (window->refcount-- == 1)
         {
             delete window;
         }

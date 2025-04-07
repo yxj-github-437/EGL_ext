@@ -81,10 +81,10 @@ logger::log_priority_t logger::log_t::get_default_level()
     static auto log_level = utils::gen_env_option<log_priority_t>(
         "LOG_LEVEL",
         {{"verbose", logger::LOG_VERBOSE},
-             {"debug",   logger::LOG_DEBUG  },
-             {"info",    logger::LOG_INFO   },
-             {"warning", logger::LOG_WARN   },
-             {"error",   logger::LOG_ERROR  }},
+         {"debug",   logger::LOG_DEBUG  },
+         {"info",    logger::LOG_INFO   },
+         {"warning", logger::LOG_WARN   },
+         {"error",   logger::LOG_ERROR  }},
         LOG_ERROR);
     // clang-format on
     return log_level;

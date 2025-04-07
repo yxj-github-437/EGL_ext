@@ -5,21 +5,22 @@ if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
 endif()
 
-include(FetchContent)
+if(CMAKE_HOST_WIN32)
+    find_package(Git)
 
-find_program(Git NAMES git)
-find_program(Patch NAMES patch)
-
-if(Git)
-    message(STATUS "find Git ${Git}")
-    set(patch_command ${Git} apply)
-elseif(Patch)
-    message(STATUS "find Patch ${Patch}")
-    set(patch_command ${Patch} -p1 -i)
-else()
-    message(FATAL_ERROR "cannot find Git or Patch")
+    if(Git_FOUND)
+        get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)
+        get_filename_component(PATCH_SEARCH_DIR ${GIT_DIR}/../usr/bin REALPATH)
+        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${PATCH_SEARCH_DIR})
+        unset(PATCH_SEARCH_DIR)
+        unset(GIT_DIR)
+    endif()
 endif()
+find_package(Patch REQUIRED)
 
+set(patch_command ${Patch_EXECUTABLE} -p1 -i)
+
+include(FetchContent)
 set(wayland_version 1.23.0)
 FetchContent_Declare(
     wayland

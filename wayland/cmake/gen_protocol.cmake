@@ -1,17 +1,3 @@
-function(find_scanner)
-    if(NOT SCANNER)
-        find_program(SCANNER NAMES wayland-scanner
-            PATHS ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../prebuild/${CMAKE_HOST_SYSTEM_NAME})
-
-        if(SCANNER)
-            message(STATUS "find wayland-scanner ${SCANNER}")
-        else()
-            message(FATAL_ERROR "cannot find wayland-scanner")
-        endif()
-    endif()
-
-endfunction()
-
 function(gen_protocol_header)
     set(options SERVER CLIENT CORE)
     set(oneValueArgs PROTOCOL_XML OUTPUT_FILE)
@@ -22,7 +8,7 @@ function(gen_protocol_header)
         set(CORE_FLAG -c)
     endif()
 
-    find_scanner()
+    find_program(SCANNER NAMES wayland-scanner REQUIRED)
 
     if(ARG_SERVER AND NOT ARG_CLIENT)
         add_custom_command(
@@ -50,7 +36,7 @@ function(gen_protocol_source)
         set(CODE_TYPE public-code)
     endif()
 
-    find_scanner()
+    find_program(SCANNER NAMES wayland-scanner REQUIRED)
 
     add_custom_command(
         OUTPUT ${ARG_OUTPUT_FILE}

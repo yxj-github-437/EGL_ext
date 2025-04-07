@@ -28,14 +28,20 @@ In the future, consider learning gl4es to implement GL interface
 
 ## Getting Started
 
-1. Build this project
+1. Build this project (For Windows need PreBuild wayland-scanner)
 2. Get libEGL.so.1 libGLESv1_CM.so.1 libGLESv2.so.2
 3. Test this project with weston in termux
+
+To Prebuild, run:
+
+```sh
+cmake -B build_pre -S /this-project-path/wayland -GNinja && ninja
+```
 
 To build, run:
 
 ```sh
-cmake -B build -DANDROID_PLATFORM=android-21 -DANDROID_ABI=arm64-v8a -DANDROID_STL=c++_shared -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+cmake -B build -S /this-project-path -DANDROID_PLATFORM=android-21 -DANDROID_ABI=arm64-v8a -DANDROID_STL=c++_shared -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -GNinja
 ```
 To test, run:
 ```sh

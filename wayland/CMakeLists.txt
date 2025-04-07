@@ -20,6 +20,8 @@ find_package(Patch REQUIRED)
 
 set(patch_command ${Patch_EXECUTABLE} -p1 -i)
 
+set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/prebuild/${CMAKE_HOST_SYSTEM_NAME})
+
 include(FetchContent)
 set(wayland_version 1.23.0)
 FetchContent_Declare(

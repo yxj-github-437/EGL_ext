@@ -3,6 +3,7 @@
 
 #include <android/hardware_buffer.h>
 #include <iostream>
+#include <vector>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/types.h>

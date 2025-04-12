@@ -638,8 +638,11 @@ bool check_wayland_display(struct wl_display* display)
     if (!check_memory_is_readable(display, sizeof(void*)))
         return false;
 
-    void* first_point = *(void**)display;
-    return first_point == (void*)&wl_display_interface;
+    const char name[] = "wl_display";
+    auto interface = static_cast<struct wl_interface*>(*(void**)display);
+    return interface == &wl_display_interface ||
+           (check_memory_is_readable(interface->name, sizeof(name)) &&
+            memcmp(interface->name, name, sizeof(name)) == 0);
 }
 
 // server wl_egl impl

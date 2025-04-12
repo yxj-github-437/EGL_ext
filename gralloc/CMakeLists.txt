@@ -17,7 +17,9 @@ target_link_libraries(gralloc PUBLIC
     cutils      # stub
 
     dl)
-
+set_target_properties(gralloc PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    INTERFACE_POSITION_INDEPENDENT_CODE ON)
 
 add_executable(gralloc_test test.cc)
 target_link_libraries(gralloc_test gralloc)

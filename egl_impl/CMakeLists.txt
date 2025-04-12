@@ -26,7 +26,8 @@ endif()
 
 add_library(EGL SHARED
     libEGL/eglApi.cc)
-set_target_properties(EGL PROPERTIES SUFFIX ".so.1")
+set_target_properties(EGL PROPERTIES SUFFIX ".so.1"
+    POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(EGL PRIVATE
     egl_loader
     egl_platform
@@ -43,7 +44,8 @@ target_compile_definitions(EGL PRIVATE
 
 add_library(GLESv1_CM SHARED
     libGLESv1_CM/gl.cc)
-set_target_properties(GLESv1_CM PROPERTIES SUFFIX ".so.1")
+set_target_properties(GLESv1_CM PROPERTIES SUFFIX ".so.1"
+    POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(GLESv1_CM PRIVATE
     EGL
     common)
@@ -59,7 +61,8 @@ target_compile_definitions(GLESv1_CM PRIVATE
 
 add_library(GLESv2 SHARED
     libGLESv2/gl2.cc)
-set_target_properties(GLESv2 PROPERTIES SUFFIX ".so.2")
+set_target_properties(GLESv2 PROPERTIES SUFFIX ".so.2"
+    POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(GLESv2 PRIVATE
     EGL
 

@@ -1,4 +1,0 @@
-add_subdirectory(cutils_stub)
-add_subdirectory(hardware_stub)
-add_subdirectory(nativebase)
-add_subdirectory(sync_stub)

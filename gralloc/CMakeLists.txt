@@ -13,7 +13,6 @@ target_include_directories(gralloc PUBLIC
 target_link_libraries(gralloc PUBLIC
     common
     hardware    # stub
-    nativebase  # stub
     cutils      # stub
 
     dl)

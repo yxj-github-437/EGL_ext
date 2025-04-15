@@ -11,7 +11,7 @@ if(CMAKE_HOST_WIN32)
     if(Git_FOUND)
         get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)
         get_filename_component(PATCH_SEARCH_DIR ${GIT_DIR}/../usr/bin REALPATH)
-        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${PATCH_SEARCH_DIR})
+        list(APPEND CMAKE_PROGRAM_PATH ${PATCH_SEARCH_DIR})
         unset(PATCH_SEARCH_DIR)
         unset(GIT_DIR)
     endif()
@@ -20,7 +20,7 @@ find_package(Patch REQUIRED)
 
 set(patch_command ${Patch_EXECUTABLE} -p1 -i)
 
-set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/prebuild/${CMAKE_HOST_SYSTEM_NAME})
+list(APPEND CMAKE_PROGRAM_PATH ${CMAKE_CURRENT_SOURCE_DIR}/prebuild/${CMAKE_HOST_SYSTEM_NAME})
 
 include(FetchContent)
 set(wayland_version 1.23.0)

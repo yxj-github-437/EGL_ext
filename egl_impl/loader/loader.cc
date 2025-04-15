@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "logger.h"
-#include "utils.h"
 
 using namespace egl_wrapper;
 

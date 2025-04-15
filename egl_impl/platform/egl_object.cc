@@ -51,7 +51,6 @@ EGLDisplay egl_display_t::getFromNativeDisplay(EGLenum platform,
     {
         if (disp == g_dpy->ndpy)
         {
-            g_dpy->ref_count++;
             return g_dpy->dpy;
         }
         else
@@ -93,7 +92,7 @@ EGLDisplay egl_display_t::getFromNativeDisplay(EGLenum platform,
     g_dpy = std::make_unique<egl_display_t>();
     g_dpy->ndpy = disp;
     g_dpy->dpy = dpy;
-    g_dpy->ref_count = 1;
+    g_dpy->ref_count = 0;
     g_dpy->wlegl_global = nullptr;
     g_dpy->platform_wrapper = std::move(platform_wrapper);
     return dpy;
@@ -119,24 +118,21 @@ EGLenum egl_display_t::getNativePlatform(EGLNativeDisplayType disp)
 
 EGLBoolean egl_display_t::initialize(EGLint* major, EGLint* minor)
 {
-    EGLBoolean rval = EGL_TRUE;
-    if (platform_wrapper)
-    {
-        rval = platform_wrapper->initialize();
-    }
-    if (rval != EGL_TRUE)
-    {
-        return rval;
-    }
-
+    std::lock_guard lock{mutex};
     auto system = egl_system_t::loader::getInstance().system;
-    rval = system->egl.eglInitialize(dpy, &this->major, &this->minor);
+    EGLBoolean rval = system->egl.eglInitialize(dpy, &this->major, &this->minor);
     if (rval == EGL_TRUE)
     {
+        ref_count++;
         if (major)
             *major = this->major;
         if (minor)
             *minor = this->minor;
+    }
+
+    if (ref_count == 1 && platform_wrapper)
+    {
+        rval = platform_wrapper->initialize();
     }
     return rval;
 }
@@ -147,7 +143,7 @@ EGLBoolean egl_display_t::terminate(EGLDisplay dpy)
     std::lock_guard lock{mutex};
     if (g_dpy && g_dpy->dpy == dpy)
     {
-        if (g_dpy->ref_count == 1)
+        if (g_dpy->ref_count == 0 || g_dpy->ref_count-- == 1)
         {
             g_dpy = nullptr;
             logger::log_info() << "call native eglTerminate";

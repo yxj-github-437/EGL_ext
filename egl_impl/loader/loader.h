@@ -2,6 +2,7 @@
 #define LOADER_H_
 
 #include "hooks.h"
+#include "utils.h"
 #include <EGL/egl.h>
 #include <memory>
 
@@ -23,6 +24,7 @@ class egl_system_t {
             __eglMustCastToProperFunctionPointerType (*)(const char*);
 
         getProcAddressType getProcAddress;
+        utils::systemlib_loader systemloader;
 
         loader();
 

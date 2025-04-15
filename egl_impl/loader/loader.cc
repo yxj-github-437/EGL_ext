@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "logger.h"
+#include "utils.h"
 
 using namespace egl_wrapper;
 
@@ -98,12 +99,7 @@ egl_system_t::loader::loader() : getProcAddress(nullptr)
 {
     // we need system libEGL, but LD_LIBRARY_PATH could make libEGL load failed,
     // so save it and reset when dlopen completed.
-    char* saved_ld_library_path = nullptr;
-    if (auto tmp = getenv("LD_LIBRARY_PATH"); tmp != nullptr)
-    {
-        saved_ld_library_path = strdup(tmp);
-        unsetenv("LD_LIBRARY_PATH");
-    }
+    auto restored = systemloader.create_ldenv_restore();
 
     libEgl = dlopen(SYSTEM_LIB_PATH "/libEGL.so", RTLD_NOW);
     if (!libEgl)
@@ -117,9 +113,9 @@ egl_system_t::loader::loader() : getProcAddress(nullptr)
 
     if (!(libEgl && libGles1 && libGles2))
     {
-
         logger::log_fatal()
             << "failed load libEGL.so, libGLESv1_CM.so, libGLESv2.so";
+        return;
     }
 
     getProcAddress = (getProcAddressType)dlsym(libEgl, "eglGetProcAddress");
@@ -131,12 +127,6 @@ egl_system_t::loader::loader() : getProcAddress(nullptr)
     system = std::shared_ptr<egl_system_t>{new egl_system_t};
     init_libegl_api();
     init_libgles_api();
-
-    if (saved_ld_library_path)
-    {
-        setenv("LD_LIBRARY_PATH", saved_ld_library_path, 1);
-        free(saved_ld_library_path);
-    }
 }
 
 void egl_system_t::loader::init_libegl_api()

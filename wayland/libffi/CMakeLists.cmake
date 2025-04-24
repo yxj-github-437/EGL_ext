@@ -302,7 +302,7 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ffi.h.in
     ${PROJECT_BINARY_DIR}/include/ffi.h)
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/fficonfig_cmake.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/fficonfig.h.cmake
     ${PROJECT_BINARY_DIR}/include/fficonfig.h)
 
 if("${TARGET}" STREQUAL "ARM64")

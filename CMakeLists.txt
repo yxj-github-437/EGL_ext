@@ -8,8 +8,8 @@ option(SUPPORT_WAYLAND "" ON)
 
 # ## wayland platform
 if(SUPPORT_WAYLAND)
+    set(WAYLAND_BUILD_SCANNER OFF)
     add_subdirectory(wayland)
-    # add_subdirectory(platform/wayland/protocol)
 endif()
 
 add_subdirectory(common)

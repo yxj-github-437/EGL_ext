@@ -2,13 +2,15 @@
 #include "gralloc_adapter.h"
 
 #include <android/hardware_buffer.h>
-#include <iostream>
-#include <vector>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <string.h>
+
+#include <iostream>
+#include <vector>
 
 void send_handle(int socket_fd, std::shared_ptr<gralloc_buffer> buffer);
 std::shared_ptr<gralloc_buffer> recv_buffer(int socket_fd);

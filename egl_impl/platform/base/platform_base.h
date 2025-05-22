@@ -138,6 +138,7 @@ class platform_wrapper_t {
     virtual ~platform_wrapper_t() = default;
 
     virtual EGLBoolean initialize() = 0;
+    virtual EGLBoolean terminate() = 0;
     virtual ANativeWindow* create_window(void* native_window) = 0;
     virtual void destroy_window(ANativeWindow* win) = 0;
     virtual void prepare_swap(ANativeWindow* win, EGLint* rects,

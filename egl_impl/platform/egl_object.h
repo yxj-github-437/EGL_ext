@@ -18,7 +18,8 @@ class egl_display_t {
     EGLDisplay dpy;
     EGLint major;
     EGLint minor;
-    uint32_t ref_count;
+
+    bool platform_initialized;
 
     std::unique_ptr<platform_wrapper_t> platform_wrapper;
     struct server_wlegl* wlegl_global;

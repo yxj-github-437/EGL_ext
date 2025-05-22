@@ -134,6 +134,7 @@ class wayland_wrapper_t : public platform_wrapper_t {
     ~wayland_wrapper_t();
 
     virtual EGLBoolean initialize() override;
+    virtual EGLBoolean terminate() override;
     virtual ANativeWindow* create_window(void* native_window) override;
     virtual void destroy_window(ANativeWindow* win) override;
     virtual void prepare_swap(ANativeWindow* win, EGLint* rects,

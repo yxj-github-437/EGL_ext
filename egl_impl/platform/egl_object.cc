@@ -16,9 +16,9 @@
 using namespace egl_wrapper;
 
 namespace {
+std::mutex mutex{};
 std::unique_ptr<egl_display_t> g_dpy;
 std::map<EGLContext, std::unique_ptr<egl_context_t>> g_ctx_map{};
-std::mutex mutex{};
 } // namespace
 
 egl_display_t* egl_display_t::get(EGLDisplay dpy)
@@ -92,7 +92,7 @@ EGLDisplay egl_display_t::getFromNativeDisplay(EGLenum platform,
     g_dpy = std::make_unique<egl_display_t>();
     g_dpy->ndpy = disp;
     g_dpy->dpy = dpy;
-    g_dpy->ref_count = 0;
+    g_dpy->platform_initialized = false;
     g_dpy->wlegl_global = nullptr;
     g_dpy->platform_wrapper = std::move(platform_wrapper);
     return dpy;
@@ -119,42 +119,49 @@ EGLenum egl_display_t::getNativePlatform(EGLNativeDisplayType disp)
 EGLBoolean egl_display_t::initialize(EGLint* major, EGLint* minor)
 {
     std::lock_guard lock{mutex};
-    auto system = egl_system_t::loader::getInstance().system;
-    EGLBoolean rval = system->egl.eglInitialize(dpy, &this->major, &this->minor);
-    if (rval == EGL_TRUE)
+    EGLBoolean rval = EGL_TRUE;
+    if (platform_wrapper && !platform_initialized &&
+        (rval = platform_wrapper->initialize()) != EGL_TRUE)
     {
-        ref_count++;
+        platform_wrapper->terminate();
+        return setError(EGL_NOT_INITIALIZED, rval);
+    }
+    platform_initialized = true;
+
+    auto system = egl_system_t::loader::getInstance().system;
+    if ((rval = system->egl.eglInitialize(dpy, &this->major, &this->minor)))
+    {
         if (major)
             *major = this->major;
         if (minor)
             *minor = this->minor;
     }
-
-    if (ref_count == 1 && platform_wrapper)
+    else
     {
-        rval = platform_wrapper->initialize();
+        if (platform_wrapper)
+            platform_wrapper->terminate();
+        platform_initialized = false;
     }
+
     return rval;
 }
 
 EGLBoolean egl_display_t::terminate(EGLDisplay dpy)
 {
-    auto system = egl_system_t::loader::getInstance().system;
     std::lock_guard lock{mutex};
+    auto system = egl_system_t::loader::getInstance().system;
     if (g_dpy && g_dpy->dpy == dpy)
     {
-        if (g_dpy->ref_count == 0 || g_dpy->ref_count-- == 1)
+        if (g_dpy->platform_wrapper && g_dpy->platform_initialized)
         {
-            g_dpy = nullptr;
-            logger::log_info() << "call native eglTerminate";
-            return system->egl.eglTerminate(dpy);
+            g_dpy->platform_wrapper->terminate();
         }
-        else
-        {
-            return EGL_TRUE;
-        }
+        g_dpy->platform_initialized = false;
+
+        logger::log_info() << "call native eglTerminate";
+        return system->egl.eglTerminate(dpy);
     }
-    return EGL_FALSE;
+    return setError(EGL_BAD_DISPLAY, EGL_FALSE);
 }
 
 egl_context_t* egl_context_t::get(EGLContext ctx)

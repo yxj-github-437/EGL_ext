@@ -522,33 +522,7 @@ wayland_wrapper_t::wayland_wrapper_t(struct wl_display* display) :
 
 wayland_wrapper_t::~wayland_wrapper_t()
 {
-    if (registry)
-    {
-        wl_registry_destroy(registry);
-        registry = nullptr;
-    }
-    if (wlegl)
-    {
-        android_wlegl_destroy(wlegl);
-        wlegl = nullptr;
-    }
-
-    if (display_wrapper)
-    {
-        wl_proxy_wrapper_destroy(display_wrapper);
-        display_wrapper = nullptr;
-    }
-    if (event_queue)
-    {
-        wl_event_queue_destroy(event_queue);
-        event_queue = nullptr;
-    }
-
-    if (own_display && display)
-    {
-        wl_display_disconnect(display);
-        display = nullptr;
-    }
+    wayland_wrapper_t::terminate();
 }
 
 EGLBoolean wayland_wrapper_t::initialize()
@@ -595,6 +569,38 @@ EGLBoolean wayland_wrapper_t::initialize()
     {
         logger::log_error() << "cannot find android_wlegl";
         return EGL_FALSE;
+    }
+
+    return EGL_TRUE;
+}
+
+EGLBoolean wayland_wrapper_t::terminate() {
+    if (wlegl)
+    {
+        android_wlegl_destroy(wlegl);
+        wlegl = nullptr;
+    }
+    if (registry)
+    {
+        wl_registry_destroy(registry);
+        registry = nullptr;
+    }
+
+    if (display_wrapper)
+    {
+        wl_proxy_wrapper_destroy(display_wrapper);
+        display_wrapper = nullptr;
+    }
+    if (event_queue)
+    {
+        wl_event_queue_destroy(event_queue);
+        event_queue = nullptr;
+    }
+
+    if (own_display && display)
+    {
+        wl_display_disconnect(display);
+        display = nullptr;
     }
 
     return EGL_TRUE;

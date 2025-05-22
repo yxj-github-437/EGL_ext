@@ -11,14 +11,12 @@ template <class T>
 T gen_env_option(const char* env_key, std::map<std::string, T> options,
                  T default_option = {})
 {
-    if (auto env = getenv(env_key); !env)
-        return default_option;
-    else
+    if (auto env = getenv(env_key); env)
     {
         if (auto iter = options.find(env); iter != options.end())
             return iter->second;
-        return default_option;
     }
+    return default_option;
 }
 
 class systemlib_loader {

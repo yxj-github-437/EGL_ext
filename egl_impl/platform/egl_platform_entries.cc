@@ -778,6 +778,9 @@ EGLBoolean eglBindWaylandDisplayWLImpl(EGLDisplay dpy,
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
 
+    if (dp->wlegl_global)
+        return EGL_FALSE;
+
     dp->wlegl_global = create_server_wlegl(display);
     return EGL_TRUE;
 }
@@ -788,6 +791,10 @@ EGLBoolean eglUnbindWaylandDisplayWLImpl(EGLDisplay dpy,
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
+
+    if (!dp->wlegl_global)
+        return EGL_FALSE;
+
     delete_server_wlegl(dp->wlegl_global);
     dp->wlegl_global = nullptr;
     return EGL_TRUE;

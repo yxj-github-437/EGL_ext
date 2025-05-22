@@ -9,11 +9,8 @@
 
 #include <time.h>
 #include <iostream>
-#include <mutex>
 
 namespace {
-std::mutex mutex{};
-
 std::ostream& format_time(std::ostream& os)
 {
     struct timespec ts;
@@ -102,10 +99,11 @@ logger::log_t::~log_t()
     else
 #endif
     {
-        std::lock_guard lock{mutex};
+        sstream.str("");
+        sstream << format_time << gen_pid_tid << prio_str(prio) << stream
+                << std::endl;
         std::ostream& out = (prio < LOG_ERROR) ? std::cout : std::cerr;
-        out << format_time << gen_pid_tid << prio_str(prio) << stream
-            << std::endl;
+        out << sstream.str();
     }
 
     if (prio == LOG_FATAL)

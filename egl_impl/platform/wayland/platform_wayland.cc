@@ -513,6 +513,7 @@ WaylandNativeWindowBuffer::~WaylandNativeWindowBuffer()
 // for server
 wayland_wrapper_t::wayland_wrapper_t(struct wl_display* display) :
     display(display),
+    display_wrapper(nullptr),
     own_display(false),
     event_queue(nullptr),
     registry(nullptr),

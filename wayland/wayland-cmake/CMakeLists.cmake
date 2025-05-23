@@ -17,10 +17,10 @@ message(STATUS "wayland version: ${WAYLAND_VERSION}")
 
 if(WAYLAND_BUILD_SCANNER AND Python3_EXECUTABLE)
     add_custom_command(
-        OUTPUT ${PROJECT_BINARY_DIR}/include/wayland.dtd.h
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
         COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
             ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd wayland_dtd >
-            ${PROJECT_BINARY_DIR}/include/wayland.dtd.h
+            ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
         DEPENDS
             ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
             ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd)
@@ -88,7 +88,9 @@ if(WAYLAND_BUILD_SCANNER)
     if(Python3_EXECUTABLE)
         target_compile_definitions(wayland-scanner PRIVATE -DHAVE_LIBXML=1)
         target_sources(wayland-scanner PRIVATE
-            ${PROJECT_BINARY_DIR}/include/wayland.dtd.h)
+            ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h)
+        target_include_directories(wayland-scanner PRIVATE
+            ${CMAKE_CURRENT_BINARY_DIR}/include)
         target_link_libraries(wayland-scanner LibXml2)
     endif()
 
@@ -191,46 +193,4 @@ if(WAYLAND_BUILD_LIBRARIES)
             PROPERTY LIBRARY_OUTPUT_DIRECTORY
             ${PROJECT_BINARY_DIR}/lib)
     endif()
-endif()
-
-message(STATUS "===========================================================================")
-message(STATUS "")
-message(STATUS "Build wayland-scanner       ${WAYLAND_BUILD_SCANNER}")
-message(STATUS "Build Wayland libraries     ${WAYLAND_BUILD_LIBRARIES}")
-
-if(WAYLAND_BUILD_LIBRARIES)
-    message(STATUS "Build wayland-server        ${WAYLAND_BUILD_LIBRARIES}")
-    message(STATUS "Build wayland-client        ${WAYLAND_BUILD_CLIENT}")
-endif()
-
-message(STATUS "")
-message(STATUS "===========================================================================")
-
-if(WAYLAND_BUILD_SCANNER)
-    install(TARGETS wayland-scanner
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
-
-if(WAYLAND_BUILD_LIBRARIES)
-    install(DIRECTORY ${PROJECT_BINARY_DIR}/include
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
-        FILES_MATCHING PATTERN "*.h")
-
-    if(WAYLAND_BUILD_SERVER)
-        install(TARGETS wayland-server
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-    endif()
-
-    if(WAYLAND_BUILD_CLIENT)
-        install(TARGETS wayland-client wayland-egl wayland-cursor
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-    endif()
-endif()
-
-if(NOT TARGET uninstall)
-    configure_file(${PROJECT_SOURCE_DIR}/wayland-cmake/cmake_uninstall.cmake.in
-        ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake IMMEDIATE @ONLY)
-
-    add_custom_target(uninstall
-        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake)
 endif()

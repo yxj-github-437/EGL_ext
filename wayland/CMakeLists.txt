@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-project(wayland VERSION 1.23.91)
+project(wayland VERSION 1.24.0)
 
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
@@ -56,7 +56,7 @@ set(wayland_version ${PROJECT_VERSION})
 FetchContent_Declare(
     wayland
     URL https://gitlab.freedesktop.org/wayland/wayland/-/releases/${wayland_version}/downloads/wayland-${wayland_version}.tar.xz
-    URL_HASH SHA256=fc2bec1a53e24f48b83d17e72d6d1170239d31edc3f3c9383b4ac2188349a304
+    URL_HASH SHA256=82892487a01ad67b334eca83b54317a7c86a03a89cfadacfef5211f11a5d0536
     PATCH_COMMAND
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/wayland-cmake/host <SOURCE_DIR>/host
     COMMAND ${patch_command} ${CMAKE_CURRENT_SOURCE_DIR}/wayland-cmake/patches/0001-fix-undefined-symbols-before-android24.patch
@@ -83,9 +83,14 @@ endif()
 message(STATUS "")
 message(STATUS "===========================================================================")
 
+include(GNUInstallDirs)
+
 if(WAYLAND_BUILD_SCANNER)
     install(TARGETS wayland-scanner
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+    install(DIRECTORY ${PROJECT_BINARY_DIR}/protocol
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/wayland)
 endif()
 
 if(WAYLAND_BUILD_LIBRARIES)

@@ -14,21 +14,14 @@ include(CheckSymbolExists)
 include(CheckTypeSize)
 
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac
-        VERSION_CONTENT REGEX "AC_INIT")
-string(REGEX MATCHALL "[0-9]+" VERSION_LIST ${VERSION_CONTENT})
-list(LENGTH VERSION_LIST LIST_LEN)
+        FFI_VERSION_STRING_CONTENT REGEX "^FFI_VERSION_STRING=\".*\"$")
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac
+        FFI_VERSION_NUMBER_CONTENT REGEX "^FFI_VERSION_NUMBER=[0-9]+$")
 
-if(LIST_LEN EQUAL 2)
-    list(GET VERSION_LIST 0 VERSION_0)
-    list(GET VERSION_LIST 1 VERSION_1)
-    set(VERSION ${VERSION_0}.${VERSION_1})
-elseif(LIST_LEN EQUAL 3)
-    list(GET VERSION_LIST 0 VERSION_0)
-    list(GET VERSION_LIST 1 VERSION_1)
-    list(GET VERSION_LIST 2 VERSION_2)
-    set(VERSION ${VERSION_0}.${VERSION_1}.${VERSION_2})
-endif()
+string(REGEX MATCH "[0-9\.]+" FFI_VERSION_STRING ${FFI_VERSION_STRING_CONTENT})
+string(REGEX MATCH "[0-9]+$" FFI_VERSION_NUMBER ${FFI_VERSION_NUMBER_CONTENT})
 
+set(VERSION ${FFI_VERSION_STRING})
 message(STATUS "libffi version: ${VERSION}")
 
 file(WRITE ${PROJECT_BINARY_DIR}/conftest.h
@@ -102,10 +95,7 @@ endif()
 
 check_include_file(sys/memfd.h HAVE_SYS_MEMFD_H)
 check_function_exists(memfd_create HAVE_MEMFD_CREATE)
-check_include_file(sys/mman.h HAVE_SYS_MMAN_H)
-check_function_exists(mmap HAVE_MMAP)
-check_function_exists(mkostemp HAVE_MKOSTEMP)
-check_function_exists(mkstemp HAVE_MKSTEMP)
+check_include_file(stdio.h HAVE_STDIO_H)
 check_function_exists(memcpy HAVE_MEMCPY)
 check_type_size(double SIZEOF_DOUBLE)
 check_type_size("long double" SIZEOF_LONG_DOUBLE)
@@ -122,8 +112,6 @@ else()
     set(HAVE_LONG_DOUBLE 1)
 endif()
 
-check_symbol_exists(MAP_ANON sys/mman.h HAVE_MMAP_ANON)
-set(HAVE_MMAP_DEV_ZERO 1)
 check_include_file(alloca.h HAVE_ALLOCA_H)
 check_c_source_compiles("
     #include <alloca.h>
@@ -178,12 +166,6 @@ check_c_source_compiles("
         return 0;
     }" HAVE_AS_REGISTER_PSEUDO_OP)
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL Windows)
-    set(CMD cmd.exe /C)
-else()
-    set(CMD /bin/sh -c)
-endif()
-
 file(WRITE ${PROJECT_BINARY_DIR}/conftest.c
     "void foo (void) {}; void bar (void) { foo (); foo (); }")
 try_compile(COMPILE_RESULT
@@ -193,7 +175,7 @@ try_compile(COMPILE_RESULT
     LINK_OPTIONS -shared
     COPY_FILE ${PROJECT_BINARY_DIR}/conftest)
 execute_process(
-    COMMAND ${CMD} "${CMAKE_READELF} -WS conftest"
+    COMMAND ${CMAKE_READELF} -WS conftest
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     OUTPUT_VARIABLE CMD_OUTPUT
     ERROR_VARIABLE IGNORE
@@ -258,7 +240,7 @@ try_compile(COMPILE_RESULT
         COPY_FILE ${PROJECT_BINARY_DIR}/conftest)
 
 execute_process(
-    COMMAND ${CMD} "${CMAKE_NM} -a conftest"
+    COMMAND ${CMAKE_NM} -a conftest
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     OUTPUT_VARIABLE CMD_OUTPUT
     ERROR_VARIABLE IGNORE
@@ -283,7 +265,7 @@ try_compile(COMPILE_RESULT
         LINK_OPTIONS -shared
         COPY_FILE ${PROJECT_BINARY_DIR}/conftest)
 execute_process(
-    COMMAND ${CMD} "${CMAKE_READELF} -a conftest"
+    COMMAND ${CMAKE_READELF} -a conftest
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     OUTPUT_VARIABLE CMD_OUTPUT
     ERROR_VARIABLE IGNORE

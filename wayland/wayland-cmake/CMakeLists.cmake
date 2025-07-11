@@ -18,6 +18,7 @@ message(STATUS "wayland version: ${WAYLAND_VERSION}")
 if(WAYLAND_BUILD_SCANNER AND Python3_EXECUTABLE)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/include
         COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
             ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd wayland_dtd >
             ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
@@ -84,6 +85,7 @@ if(WAYLAND_BUILD_SCANNER)
     target_link_libraries(wayland-scanner
         wayland-util
         expat)
+    target_link_options(wayland-scanner PRIVATE -Wl,--as-needed)
 
     if(Python3_EXECUTABLE)
         target_compile_definitions(wayland-scanner PRIVATE -DHAVE_LIBXML=1)
@@ -104,6 +106,13 @@ if(CMAKE_CROSSCOMPILING OR NOT WAYLAND_BUILD_SCANNER)
 else()
     add_executable(wayland::scanner ALIAS wayland-scanner)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.xml
+    ${PROJECT_BINARY_DIR}/protocol/wayland.xml COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd
+    ${PROJECT_BINARY_DIR}/protocol/wayland.dtd COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/wayland-scanner.mk
+    ${PROJECT_BINARY_DIR}/protocol/wayland-scanner.mk COPYONLY)
 
 if(WAYLAND_BUILD_LIBRARIES)
     add_link_options(-Wl,--as-needed)

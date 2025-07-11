@@ -3,9 +3,6 @@
 /* Define if building universal (internal helper macro) */
 #cmakedefine AC_APPLE_UNIVERSAL_BUILD
 
-/* Define to 1 if using 'alloca.c'. */
-#cmakedefine C_ALLOCA
-
 /* Define to the flags needed for the .section .eh_frame directive. */
 #cmakedefine EH_FRAME_FLAGS "@EH_FRAME_FLAGS@"
 
@@ -31,11 +28,11 @@
 /* Define this if you do not want support for aggregate types. */
 #cmakedefine01 FFI_NO_STRUCTS
 
-/* Define to 1 if you have 'alloca', as a function or macro. */
-#cmakedefine01 HAVE_ALLOCA
-
 /* Define to 1 if <alloca.h> works. */
 #cmakedefine01 HAVE_ALLOCA_H
+
+/* Define if your compiler supports pointer authentication. */
+#cmakedefine HAVE_ARM64E_PTRAUTH
 
 /* Define if your assembler supports .cfi_* directives. */
 #cmakedefine HAVE_AS_CFI_PSEUDO_OP
@@ -77,27 +74,6 @@
 /* Define to 1 if you have the `memfd_create' function. */
 #cmakedefine HAVE_MEMFD_CREATE
 
-/* Define to 1 if you have the `mkostemp' function. */
-#cmakedefine HAVE_MKOSTEMP
-
-/* Define to 1 if you have the `mkstemp' function. */
-#cmakedefine01 HAVE_MKSTEMP
-
-/* Define to 1 if you have the `mmap' function. */
-#cmakedefine01 HAVE_MMAP
-
-/* Define if mmap with MAP_ANON(YMOUS) works. */
-#cmakedefine HAVE_MMAP_ANON
-
-/* Define if mmap of /dev/zero works. */
-#cmakedefine HAVE_MMAP_DEV_ZERO
-
-/* Define if read-only mmap of a plain file works. */
-#cmakedefine HAVE_MMAP_FILE
-
-/* Define if your compiler supports pointer authentication. */
-#cmakedefine HAVE_PTRAUTH
-
 /* Define if .eh_frame sections should be read-only. */
 #cmakedefine HAVE_RO_EH_FRAME
 
@@ -118,9 +94,6 @@
 
 /* Define to 1 if you have the <sys/memfd.h> header file. */
 #cmakedefine01 HAVE_SYS_MEMFD_H
-
-/* Define to 1 if you have the <sys/mman.h> header file. */
-#cmakedefine01 HAVE_SYS_MMAN_H
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #cmakedefine01 HAVE_SYS_STAT_H
@@ -167,14 +140,6 @@
 /* The size of `size_t', as computed by sizeof. */
 #cmakedefine SIZEOF_SIZE_T @SIZEOF_SIZE_T@
 
-/* If using the C implementation of alloca, define if you know the
-   direction of stack growth for your system; otherwise it will be
-   automatically deduced at runtime.
-        STACK_DIRECTION > 0 => grows toward higher addresses
-        STACK_DIRECTION < 0 => grows toward lower addresses
-        STACK_DIRECTION = 0 => direction of growth unknown */
-#cmakedefine STACK_DIRECTION @STACK_DIRECTION@
-
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
@@ -201,9 +166,6 @@
 #undef WORDS_BIGENDIAN
 #endif
 #endif
-
-/* Define to `unsigned int' if <sys/types.h> does not define. */
-#cmakedefine size_t @size_t@
 
 #ifdef HAVE_HIDDEN_VISIBILITY_ATTRIBUTE
 #ifdef LIBFFI_ASM

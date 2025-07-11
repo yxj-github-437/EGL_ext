@@ -19,6 +19,9 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
 #include <string>
 #include <memory>
 

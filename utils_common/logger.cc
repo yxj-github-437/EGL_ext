@@ -9,8 +9,14 @@
 
 #include <time.h>
 #include <iostream>
+#include <mutex>
 
 namespace {
+std::mutex& mutex = []() -> std::mutex& {
+    alignas(alignof(std::mutex)) static char buf[sizeof(std::mutex)];
+    return *new (buf) std::mutex{};
+}();
+
 std::ostream& format_time(std::ostream& os)
 {
     struct timespec ts;
@@ -93,17 +99,16 @@ logger::log_t::~log_t()
     if (stream.empty())
         return;
 
+    std::lock_guard _l{mutex};
 #ifdef __ANDROID__
     if (getenv("RUN_IN_ANDROID"))
         __android_log_write(prio_cast(prio), LOG_TAG, stream.c_str());
     else
 #endif
     {
-        sstream.str("");
-        sstream << format_time << gen_pid_tid << prio_str(prio) << stream
-                << std::endl;
         std::ostream& out = (prio < LOG_ERROR) ? std::cout : std::cerr;
-        out << sstream.str();
+        out << format_time << gen_pid_tid << prio_str(prio) << stream
+            << std::endl;
     }
 
     if (prio == LOG_FATAL)

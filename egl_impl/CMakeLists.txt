@@ -3,7 +3,7 @@ target_sources(egl_loader PRIVATE loader/loader.cc)
 target_include_directories(egl_loader PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(egl_loader PUBLIC common egl_platform)
+target_link_libraries(egl_loader PUBLIC utils_common egl_platform)
 
 add_library(egl_platform)
 target_sources(egl_platform PRIVATE
@@ -13,7 +13,7 @@ target_sources(egl_platform PRIVATE
 target_include_directories(egl_platform PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(egl_platform PUBLIC common)
+target_link_libraries(egl_platform PUBLIC utils_common)
 target_compile_definitions(egl_platform PRIVATE
     EGL_EGLEXT_PROTOTYPES
     GL_GLEXT_PROTOTYPES)
@@ -48,7 +48,7 @@ set_target_properties(GLESv1_CM PROPERTIES SUFFIX ".so.1"
     POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(GLESv1_CM PRIVATE
     EGL
-    common)
+    utils_common)
 target_include_directories(GLESv1_CM
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -66,7 +66,7 @@ set_target_properties(GLESv2 PROPERTIES SUFFIX ".so.2"
 target_link_libraries(GLESv2 PRIVATE
     EGL
 
-    common)
+    utils_common)
 target_include_directories(GLESv2
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

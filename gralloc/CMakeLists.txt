@@ -11,7 +11,7 @@ target_include_directories(gralloc PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
 
 target_link_libraries(gralloc PUBLIC
-    common
+    utils_common
     hardware    # stub
     cutils      # stub
 

@@ -12,7 +12,7 @@ if(SUPPORT_WAYLAND)
     add_subdirectory(wayland)
 endif()
 
-add_subdirectory(common)
+add_subdirectory(utils_common)
 add_subdirectory(android_stub)
 add_subdirectory(gralloc)
 add_subdirectory(egl_impl)

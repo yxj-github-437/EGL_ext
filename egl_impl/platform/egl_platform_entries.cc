@@ -109,21 +109,8 @@ static const extension_map_t sExtensionMap[] = {
     { "eglSignalSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglSignalSyncKHR },
     { "eglGetSyncAttribKHR", (__eglMustCastToProperFunctionPointerType)&eglGetSyncAttribKHR },
 
-    // EGL_NV_system_time
-    { "eglGetSystemTimeFrequencyNV", (__eglMustCastToProperFunctionPointerType)&eglGetSystemTimeFrequencyNV },
-    { "eglGetSystemTimeNV", (__eglMustCastToProperFunctionPointerType)&eglGetSystemTimeNV },
-
     // EGL_KHR_wait_sync
     { "eglWaitSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglWaitSyncKHR },
-
-    // EGL_ANDROID_presentation_time
-    { "eglPresentationTimeANDROID", (__eglMustCastToProperFunctionPointerType)&eglPresentationTimeANDROID },
-
-    // EGL_KHR_swap_buffers_with_damage
-    { "eglSwapBuffersWithDamageKHR", (__eglMustCastToProperFunctionPointerType)&eglSwapBuffersWithDamageKHR },
-
-    // EGL_ANDROID_get_native_client_buffer
-    { "eglGetNativeClientBufferANDROID", (__eglMustCastToProperFunctionPointerType)&eglGetNativeClientBufferANDROID },
 
     // EGL_KHR_partial_update
     { "eglSetDamageRegionKHR", (__eglMustCastToProperFunctionPointerType)&eglSetDamageRegionKHR },
@@ -140,9 +127,6 @@ static const extension_map_t sExtensionMap[] = {
     { "eglStreamConsumerReleaseKHR", (__eglMustCastToProperFunctionPointerType)&eglStreamConsumerReleaseKHR },
     { "eglGetStreamFileDescriptorKHR", (__eglMustCastToProperFunctionPointerType)&eglGetStreamFileDescriptorKHR },
     { "eglCreateStreamFromFileDescriptorKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateStreamFromFileDescriptorKHR },
-
-    // EGL_ANDROID_native_fence_sync
-    { "eglDupNativeFenceFDANDROID", (__eglMustCastToProperFunctionPointerType)&eglDupNativeFenceFDANDROID },
 };
 // clang-format on
 

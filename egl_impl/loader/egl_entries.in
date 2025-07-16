@@ -91,21 +91,6 @@ EGL_ENTRY(EGLint,       eglWaitSyncKHR,         EGLDisplay, EGLSyncKHR, EGLint)
 EGL_ENTRY(EGLSurface, eglCreatePlatformWindowSurfaceEXT, EGLDisplay, EGLConfig, void *, const EGLint *)
 EGL_ENTRY(EGLSurface, eglCreatePlatformPixmapSurfaceEXT, EGLDisplay, EGLConfig, void *, const EGLint *)
 
-/* ANDROID extensions */
-
-EGL_ENTRY(const char*, eglQueryStringImplementationANDROID, EGLDisplay, EGLint)
-EGL_ENTRY(EGLBoolean, eglSetSwapRectangleANDROID, EGLDisplay, EGLSurface, EGLint, EGLint, EGLint, EGLint)
-EGL_ENTRY(EGLClientBuffer, eglGetRenderBufferANDROID, EGLDisplay, EGLSurface)
-EGL_ENTRY(EGLint, eglDupNativeFenceFDANDROID, EGLDisplay, EGLSyncKHR)
-EGL_ENTRY(EGLBoolean, eglPresentationTimeANDROID, EGLDisplay, EGLSurface, EGLnsecsANDROID)
-EGL_ENTRY(EGLClientBuffer, eglCreateNativeClientBufferANDROID, const EGLint *)
-EGL_ENTRY(EGLClientBuffer, eglGetNativeClientBufferANDROID, const AHardwareBuffer *)
-
-/* NVIDIA extensions */
-
-EGL_ENTRY(EGLuint64NV, eglGetSystemTimeFrequencyNV, void)
-EGL_ENTRY(EGLuint64NV, eglGetSystemTimeNV, void)
-
 /* Partial update extensions */
 
 EGL_ENTRY(EGLBoolean, eglSwapBuffersWithDamageKHR, EGLDisplay, EGLSurface, EGLint *, EGLint)

@@ -292,15 +292,6 @@ const char* eglQueryString(EGLDisplay dpy, EGLint name)
     return system->platform.eglQueryString(dpy, name);
 }
 
-extern "C" EGLAPI const char*
-eglQueryStringImplementationANDROID(EGLDisplay dpy, EGLint name)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglQueryStringImplementationANDROID(dpy, name);
-}
-
 EGLBoolean eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface,
                             EGLint attribute, EGLint value)
 {
@@ -630,44 +621,6 @@ EGLBoolean eglWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->platform.eglWaitSync(dpy, sync, flags);
-}
-
-EGLint eglDupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglDupNativeFenceFDANDROID(dpy, sync);
-}
-
-EGLBoolean eglPresentationTimeANDROID(EGLDisplay dpy, EGLSurface surface,
-                                      EGLnsecsANDROID time)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglPresentationTimeANDROID(dpy, surface, time);
-}
-
-EGLClientBuffer eglGetNativeClientBufferANDROID(const AHardwareBuffer* buffer)
-{
-    clearError();
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglGetNativeClientBufferANDROID(buffer);
-}
-
-EGLuint64NV eglGetSystemTimeFrequencyNV()
-{
-    clearError();
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglGetSystemTimeFrequencyNV();
-}
-
-EGLuint64NV eglGetSystemTimeNV()
-{
-    clearError();
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglGetSystemTimeNV();
 }
 
 EGLBoolean eglSetDamageRegionKHR(EGLDisplay dpy, EGLSurface surface,

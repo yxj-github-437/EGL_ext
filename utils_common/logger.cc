@@ -32,23 +32,38 @@ std::ostream& gen_pid_tid(std::ostream& os)
 
 const char* prio_str(logger::log_priority_t prio)
 {
+#define LIGHT_GRAY "\e[37m"
+#define LIGHT_CYAN "\e[96m"
+#define LIGHT_GREEN "\e[92m"
+#define LIGHT_YELLOW "\e[93m"
+#define LIGHT_RED "\e[91m"
+#define BACK_RED "\e[41m"
+#define COLOR_NULL "\e[m"
     switch (prio)
     {
     case logger::LOG_VERBOSE:
-        return "[V] ";
+        return "[" LIGHT_GRAY "V" COLOR_NULL "] ";
     case logger::LOG_DEBUG:
-        return "[D] ";
+        return "[" LIGHT_CYAN "D" COLOR_NULL "] ";
     case logger::LOG_INFO:
-        return "[I] ";
+        return "[" LIGHT_GREEN "I" COLOR_NULL "] ";
     case logger::LOG_WARN:
-        return "[W] ";
+        return "[" LIGHT_YELLOW "W" COLOR_NULL "] ";
     case logger::LOG_ERROR:
-        return "[E] ";
+        return "[" LIGHT_RED "E" COLOR_NULL "] ";
     case logger::LOG_FATAL:
-        return "[F] ";
+        return "[" BACK_RED "F" COLOR_NULL "] ";
     default:
         return "[-] ";
     }
+
+#undef LIGHT_GRAY
+#undef LIGHT_CYAN
+#undef LIGHT_GREEN
+#undef LIGHT_YELLOW
+#undef LIGHT_RED
+#undef BACK_RED
+#undef COLOR_NULL
 }
 
 android_LogPriority prio_cast(logger::log_priority_t prio)

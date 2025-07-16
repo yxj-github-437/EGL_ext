@@ -16,14 +16,18 @@ enum log_priority_t {
 class log_t {
     std::stringstream sstream;
     enum log_priority_t prio;
-    log_priority_t get_default_level();
+
+    static log_priority_t get_default_level();
+    static inline enum log_priority_t setting_prio = LOG_ERROR;
 
   public:
+    static void set_log_level(log_priority_t prio) { setting_prio = prio; }
+
     template <typename T>
     [[gnu::always_inline]]
     log_t& operator<<(T&& arg)
     {
-        if (prio >= get_default_level())
+        if (prio >= std::min(get_default_level(), setting_prio))
             sstream << std::forward<T>(arg);
         return *this;
     }

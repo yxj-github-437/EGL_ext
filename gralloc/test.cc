@@ -7,6 +7,8 @@
 
 int main()
 {
+    logger::log_t::set_log_level(logger::LOG_DEBUG);
+
     auto adapter = gralloc_loader::getInstance().get_adapter();
     auto buffer = adapter->allocate_buffer(
         100, 100, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,

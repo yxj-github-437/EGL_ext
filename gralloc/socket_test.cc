@@ -18,6 +18,8 @@ auto adapter = gralloc_adapter_t::loader::getInstance().get_adapter();
 
 int main()
 {
+    logger::log_t::set_log_level(logger::LOG_DEBUG);
+
     int fd_pair[2] = {};
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, fd_pair) < 0)
     {

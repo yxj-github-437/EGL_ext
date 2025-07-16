@@ -12,11 +12,6 @@
 #include <mutex>
 
 namespace {
-std::mutex& mutex = []() -> std::mutex& {
-    alignas(alignof(std::mutex)) static char buf[sizeof(std::mutex)];
-    return *new (buf) std::mutex{};
-}();
-
 std::ostream& format_time(std::ostream& os)
 {
     struct timespec ts;
@@ -98,6 +93,11 @@ logger::log_t::~log_t()
     std::string stream = sstream.str();
     if (stream.empty())
         return;
+
+    static std::mutex& mutex = []() -> std::mutex& {
+        alignas(alignof(std::mutex)) static char buf[sizeof(std::mutex)];
+        return *new (buf) std::mutex{};
+    }();
 
     std::lock_guard _l{mutex};
 #ifdef __ANDROID__

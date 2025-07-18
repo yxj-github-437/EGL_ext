@@ -17,13 +17,11 @@
 #ifndef EGL_PLATFORM_ENTRIES_H_
 #define EGL_PLATFORM_ENTRIES_H_
 
-#include <EGL/egl.h>
-
-typedef __eglMustCastToProperFunctionPointerType EGLFuncPointer;
+#include "loader/hooks.h"
 
 namespace egl_wrapper {
 
-EGLFuncPointer FindPlatformImplAddr(const char* name);
+void fullPlatformImpl(platform_impl_t& pImpl);
 
 }; // namespace wrapper
 

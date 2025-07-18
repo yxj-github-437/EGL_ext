@@ -176,23 +176,7 @@ egl_system_t::loader::~loader()
 
 egl_system_t::egl_system_t()
 {
-    const char* const* entries = platform_names;
-    EGLFuncPointer* curr = reinterpret_cast<EGLFuncPointer*>(&platform);
-    while (*entries)
-    {
-        const char* name = *entries;
-        EGLFuncPointer f = FindPlatformImplAddr(name);
-
-        if (f == nullptr)
-        {
-            // If no entry found, update the lookup table: sPlatformImplMap
-            logger::log_error()
-                << "No entry found in platform lookup table for " << name;
-        }
-
-        *curr++ = f;
-        entries++;
-    }
+    fullPlatformImpl(platform);
 }
 
 std::shared_ptr<egl_system_t> egl_wrapper::egl_get_system()

@@ -93,5 +93,5 @@ EGL_ENTRY(EGLSurface, eglCreatePlatformPixmapSurfaceEXT, EGLDisplay, EGLConfig, 
 
 /* Partial update extensions */
 
-EGL_ENTRY(EGLBoolean, eglSwapBuffersWithDamageKHR, EGLDisplay, EGLSurface, EGLint *, EGLint)
+EGL_ENTRY(EGLBoolean, eglSwapBuffersWithDamageKHR, EGLDisplay, EGLSurface, const EGLint *, EGLint)
 EGL_ENTRY(EGLBoolean, eglSetDamageRegionKHR, EGLDisplay, EGLSurface, EGLint *, EGLint)

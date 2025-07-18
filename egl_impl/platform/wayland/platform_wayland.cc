@@ -191,7 +191,7 @@ struct wl_callback_listener WaylandNativeWindow::throttle_listener = {
     // clang-format on
 };
 
-void WaylandNativeWindow::prepare_swap(EGLint* damage_rects,
+void WaylandNativeWindow::prepare_swap(const EGLint* damage_rects,
                                        EGLint damage_n_rects)
 {
     std::lock_guard lock{m_mutex};
@@ -575,7 +575,8 @@ EGLBoolean wayland_wrapper_t::initialize()
     return EGL_TRUE;
 }
 
-EGLBoolean wayland_wrapper_t::terminate() {
+EGLBoolean wayland_wrapper_t::terminate()
+{
     if (wlegl)
     {
         android_wlegl_destroy(wlegl);
@@ -627,7 +628,7 @@ void wayland_wrapper_t::destroy_window(ANativeWindow* win)
     win->common.decRef(&win->common);
 }
 
-void wayland_wrapper_t::prepare_swap(ANativeWindow* win, EGLint* rects,
+void wayland_wrapper_t::prepare_swap(ANativeWindow* win, const EGLint* rects,
                                      EGLint n_rects)
 {
     auto wayland_window = static_cast<WaylandNativeWindow*>(win);

@@ -565,7 +565,7 @@ eglGetProcAddressImpl(const char* procname)
 }
 
 EGLBoolean eglSwapBuffersWithDamageKHRImpl(EGLDisplay dpy, EGLSurface draw,
-                                           EGLint* rects, EGLint n_rects)
+                                           const EGLint* rects, EGLint n_rects)
 {
     auto system = egl_system_t::loader::getInstance().system;
     EGLBoolean rval = EGL_TRUE;
@@ -1411,123 +1411,21 @@ void glGetInteger64vImpl(GLenum pname, GLint64* data)
         _c->glGetInteger64v(pname, data);
 }
 
-struct implementation_map_t
+#undef GL_ENTRY
+#undef EGL_ENTRY
+#define GL_ENTRY(_r, _api, ...) _api ## Impl,
+#define EGL_ENTRY(_r, _api, ...) _api ## Impl,
+void fullPlatformImpl(platform_impl_t& pImpl)
 {
-    const char* name;
-    EGLFuncPointer address;
-};
+    // clang-format off
+    platform_impl_t impl = {
+        #include "loader/platform_entries.in"
+    };
+    // clang-format on
 
-// clang-format off
-static const implementation_map_t sPlatformImplMap[] = {
-    { "eglGetDisplay", (EGLFuncPointer)&eglGetDisplayImpl },
-    { "eglGetPlatformDisplay", (EGLFuncPointer)&eglGetPlatformDisplayImpl },
-    { "eglInitialize", (EGLFuncPointer)&eglInitializeImpl },
-    { "eglTerminate", (EGLFuncPointer)&eglTerminateImpl },
-    { "eglGetConfigs", (EGLFuncPointer)&eglGetConfigsImpl },
-    { "eglChooseConfig", (EGLFuncPointer)&eglChooseConfigImpl },
-    { "eglGetConfigAttrib", (EGLFuncPointer)&eglGetConfigAttribImpl },
-    { "eglCreateWindowSurface", (EGLFuncPointer)&eglCreateWindowSurfaceImpl },
-    { "eglCreatePixmapSurface", (EGLFuncPointer)&eglCreatePixmapSurfaceImpl },
-    { "eglCreatePlatformWindowSurface", (EGLFuncPointer)&eglCreatePlatformWindowSurfaceImpl },
-    { "eglCreatePlatformPixmapSurface", (EGLFuncPointer)&eglCreatePlatformPixmapSurfaceImpl },
-    { "eglCreatePbufferSurface", (EGLFuncPointer)&eglCreatePbufferSurfaceImpl },
-    { "eglDestroySurface", (EGLFuncPointer)&eglDestroySurfaceImpl },
-    { "eglQuerySurface", (EGLFuncPointer)&eglQuerySurfaceImpl },
-    { "eglBeginFrame", (EGLFuncPointer)&eglBeginFrameImpl },
-    { "eglCreateContext", (EGLFuncPointer)&eglCreateContextImpl },
-    { "eglDestroyContext", (EGLFuncPointer)&eglDestroyContextImpl },
-    { "eglMakeCurrent", (EGLFuncPointer)&eglMakeCurrentImpl },
-    { "eglQueryContext", (EGLFuncPointer)&eglQueryContextImpl },
-    { "eglGetCurrentContext", (EGLFuncPointer)&eglGetCurrentContextImpl },
-    { "eglGetCurrentSurface", (EGLFuncPointer)&eglGetCurrentSurfaceImpl },
-    { "eglGetCurrentDisplay", (EGLFuncPointer)&eglGetCurrentDisplayImpl },
-    { "eglWaitGL", (EGLFuncPointer)&eglWaitGLImpl },
-    { "eglWaitNative", (EGLFuncPointer)&eglWaitNativeImpl },
-    { "eglGetError", (EGLFuncPointer)&eglGetErrorImpl },
-    { "eglSwapBuffersWithDamageKHR", (EGLFuncPointer)&eglSwapBuffersWithDamageKHRImpl },
-    { "eglGetProcAddress", (EGLFuncPointer)&eglGetProcAddressImpl },
-    { "eglSwapBuffers", (EGLFuncPointer)&eglSwapBuffersImpl },
-    { "eglCopyBuffers", (EGLFuncPointer)&eglCopyBuffersImpl },
-    { "eglQueryString", (EGLFuncPointer)&eglQueryStringImpl },
-    { "eglSurfaceAttrib", (EGLFuncPointer)&eglSurfaceAttribImpl },
-    { "eglBindTexImage", (EGLFuncPointer)&eglBindTexImageImpl },
-    { "eglReleaseTexImage", (EGLFuncPointer)&eglReleaseTexImageImpl },
-    { "eglSwapInterval", (EGLFuncPointer)&eglSwapIntervalImpl },
-    { "eglWaitClient", (EGLFuncPointer)&eglWaitClientImpl },
-    { "eglBindAPI", (EGLFuncPointer)&eglBindAPIImpl },
-    { "eglQueryAPI", (EGLFuncPointer)&eglQueryAPIImpl },
-    { "eglReleaseThread", (EGLFuncPointer)&eglReleaseThreadImpl },
-    { "eglCreatePbufferFromClientBuffer", (EGLFuncPointer)&eglCreatePbufferFromClientBufferImpl },
-    { "eglLockSurfaceKHR", (EGLFuncPointer)&eglLockSurfaceKHRImpl },
-    { "eglUnlockSurfaceKHR", (EGLFuncPointer)&eglUnlockSurfaceKHRImpl },
-    { "eglCreateImageKHR", (EGLFuncPointer)&eglCreateImageKHRImpl },
-    { "eglDestroyImageKHR", (EGLFuncPointer)&eglDestroyImageKHRImpl },
-    { "eglCreateImage", (EGLFuncPointer)&eglCreateImageImpl },
-    { "eglDestroyImage", (EGLFuncPointer)&eglDestroyImageImpl },
-    { "eglCreateSync", (EGLFuncPointer)&eglCreateSyncImpl },
-    { "eglDestroySync", (EGLFuncPointer)&eglDestroySyncImpl },
-    { "eglClientWaitSync", (EGLFuncPointer)&eglClientWaitSyncImpl },
-    { "eglGetSyncAttrib", (EGLFuncPointer)&eglGetSyncAttribImpl },
-    { "eglCreateSyncKHR", (EGLFuncPointer)&eglCreateSyncKHRImpl },
-    { "eglDestroySyncKHR", (EGLFuncPointer)&eglDestroySyncKHRImpl },
-    { "eglSignalSyncKHR", (EGLFuncPointer)&eglSignalSyncKHRImpl },
-    { "eglClientWaitSyncKHR", (EGLFuncPointer)&eglClientWaitSyncKHRImpl },
-    { "eglGetSyncAttribKHR", (EGLFuncPointer)&eglGetSyncAttribKHRImpl },
-    { "eglCreateStreamKHR", (EGLFuncPointer)&eglCreateStreamKHRImpl },
-    { "eglDestroyStreamKHR", (EGLFuncPointer)&eglDestroyStreamKHRImpl },
-    { "eglStreamAttribKHR", (EGLFuncPointer)&eglStreamAttribKHRImpl },
-    { "eglQueryStreamKHR", (EGLFuncPointer)&eglQueryStreamKHRImpl },
-    { "eglQueryStreamu64KHR", (EGLFuncPointer)&eglQueryStreamu64KHRImpl },
-    { "eglQueryStreamTimeKHR", (EGLFuncPointer)&eglQueryStreamTimeKHRImpl },
-    { "eglCreateStreamProducerSurfaceKHR", (EGLFuncPointer)&eglCreateStreamProducerSurfaceKHRImpl },
-    { "eglStreamConsumerGLTextureExternalKHR", (EGLFuncPointer)&eglStreamConsumerGLTextureExternalKHRImpl },
-    { "eglStreamConsumerAcquireKHR", (EGLFuncPointer)&eglStreamConsumerAcquireKHRImpl },
-    { "eglStreamConsumerReleaseKHR", (EGLFuncPointer)&eglStreamConsumerReleaseKHRImpl },
-    { "eglGetStreamFileDescriptorKHR", (EGLFuncPointer)&eglGetStreamFileDescriptorKHRImpl },
-    { "eglCreateStreamFromFileDescriptorKHR", (EGLFuncPointer)&eglCreateStreamFromFileDescriptorKHRImpl },
-    { "eglWaitSync", (EGLFuncPointer)&eglWaitSyncImpl },
-    { "eglWaitSyncKHR", (EGLFuncPointer)&eglWaitSyncKHRImpl },
-    { "glGetString", (EGLFuncPointer)&glGetStringImpl },
-    { "glGetStringi", (EGLFuncPointer)&glGetStringiImpl },
-    { "glGetBooleanv", (EGLFuncPointer)&glGetBooleanvImpl },
-    { "glGetFloatv", (EGLFuncPointer)&glGetFloatvImpl },
-    { "glGetIntegerv", (EGLFuncPointer)&glGetIntegervImpl },
-    { "glGetInteger64v", (EGLFuncPointer)&glGetInteger64vImpl },
-};
-// clang-format on
-
-EGLFuncPointer FindPlatformImplAddr(const char* name)
-{
-    static const bool DEBUG = false;
-
-    if (name == nullptr)
-    {
-        logger::log_verbose() << "FindPlatformImplAddr called with null name";
-        return nullptr;
-    }
-
-    for (int i = 0; i < NELEM(sPlatformImplMap); i++)
-    {
-        if (sPlatformImplMap[i].name == nullptr)
-        {
-            logger::log_verbose()
-                << "FindPlatformImplAddr found nullptr for sPlatformImplMap["
-                << i << "].name (" << name << ")";
-            return nullptr;
-        }
-        if (!strcmp(name, sPlatformImplMap[i].name))
-        {
-            //            logger::log_verbose() << "FindPlatformImplAddr found "
-            //                                  <<
-            //                                  (void*)sPlatformImplMap[i].address
-            //                                  << " for sPlatformImplMap[" << i
-            //                                  << "].address (" << name << ")";
-            return sPlatformImplMap[i].address;
-        }
-    }
-
-    logger::log_error() << "FindPlatformImplAddr did not find an entry for "
-                        << name;
-    return nullptr;
+    memcpy(&pImpl, &impl, sizeof(platform_impl_t));
 }
+#undef GL_ENTRY
+#undef EGL_ENTRY
+
 } // namespace egl_wrapper

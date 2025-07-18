@@ -26,7 +26,7 @@ class WaylandNativeWindow : public EGLBaseNativeWindow {
     void releaseBuffer(struct wl_buffer* buf);
 
     virtual int setSwapInterval(int interval) override;
-    void prepare_swap(EGLint* damage_rects, EGLint damage_n_rects);
+    void prepare_swap(const EGLint* damage_rects, EGLint damage_n_rects);
     void finish_swap();
 
     struct wl_event_queue* event_queue;
@@ -80,7 +80,8 @@ class WaylandNativeWindow : public EGLBaseNativeWindow {
     int m_swap_interval;
 
     int m_bufCount;
-    EGLint *m_damage_rects, m_damage_n_rects;
+    const EGLint* m_damage_rects;
+    EGLint m_damage_n_rects;
     struct wl_callback* throttle_callback;
     static struct wl_callback_listener throttle_listener;
 };
@@ -137,7 +138,7 @@ class wayland_wrapper_t : public platform_wrapper_t {
     virtual EGLBoolean terminate() override;
     virtual ANativeWindow* create_window(void* native_window) override;
     virtual void destroy_window(ANativeWindow* win) override;
-    virtual void prepare_swap(ANativeWindow* win, EGLint* rects,
+    virtual void prepare_swap(ANativeWindow* win, const EGLint* rects,
                               EGLint n_rects) override;
     virtual void finish_swap(ANativeWindow* win) override;
 };

@@ -102,8 +102,6 @@ inline void convertInts(const EGLint* attrib_list,
 // ----------------------------------------------------------------------------
 
 auto setGLHooksThreadSpecific = setGlThreadSpecific;
-extern const __eglMustCastToProperFunctionPointerType
-    gExtensionForwarders[MAX_NUMBER_OF_GL_EXTENSIONS];
 
 namespace {
     std::mutex mutex{};
@@ -348,11 +346,6 @@ EGLBoolean eglQuerySurfaceImpl(EGLDisplay dpy, EGLSurface surface,
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglQuerySurface(dpy, surface, attribute, value);
-}
-
-void eglBeginFrameImpl(EGLDisplay dpy, EGLSurface surface)
-{
-    return;
 }
 
 // ----------------------------------------------------------------------------
@@ -732,8 +725,11 @@ EGLBoolean eglLockSurfaceKHRImpl(EGLDisplay dpy, EGLSurface surface,
                                  const EGLint* attrib_list)
 {
     auto system = egl_system_t::loader::getInstance().system;
-
-    return system->egl.eglLockSurfaceKHR(dpy, surface, attrib_list);
+    if (system->egl.eglLockSurfaceKHR)
+    {
+        return system->egl.eglLockSurfaceKHR(dpy, surface, attrib_list);
+    }
+    return setError(EGL_BAD_DISPLAY, (EGLBoolean)EGL_FALSE);
 }
 
 EGLBoolean eglUnlockSurfaceKHRImpl(EGLDisplay dpy, EGLSurface surface)
@@ -955,11 +951,6 @@ EGLBoolean eglGetSyncAttribTmpl(EGLDisplay dpy, EGLSyncKHR sync,
     return result;
 }
 
-typedef EGLBoolean(EGLAPIENTRYP PFNEGLGETSYNCATTRIB)(EGLDisplay dpy,
-                                                     EGLSync sync,
-                                                     EGLint attribute,
-                                                     EGLAttrib* value);
-
 EGLBoolean eglGetSyncAttribImpl(EGLDisplay dpy, EGLSync sync, EGLint attribute,
                                 EGLAttrib* value)
 {
@@ -987,152 +978,6 @@ EGLBoolean eglGetSyncAttribKHRImpl(EGLDisplay dpy, EGLSyncKHR sync,
     auto system = egl_system_t::loader::getInstance().system;
     return eglGetSyncAttribTmpl(dpy, sync, attribute, value,
                                 system->egl.eglGetSyncAttribKHR);
-}
-
-EGLStreamKHR eglCreateStreamKHRImpl(EGLDisplay dpy, const EGLint* attrib_list)
-{
-    EGLStreamKHR result = EGL_NO_STREAM_KHR;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglCreateStreamKHR)
-    {
-        result = system->egl.eglCreateStreamKHR(dpy, attrib_list);
-    }
-    return result;
-}
-
-EGLBoolean eglDestroyStreamKHRImpl(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglDestroyStreamKHR)
-    {
-        result = system->egl.eglDestroyStreamKHR(dpy, stream);
-    }
-    return result;
-}
-
-EGLBoolean eglStreamAttribKHRImpl(EGLDisplay dpy, EGLStreamKHR stream,
-                                  EGLenum attribute, EGLint value)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglStreamAttribKHR)
-    {
-        result = system->egl.eglStreamAttribKHR(dpy, stream, attribute, value);
-    }
-    return result;
-}
-
-EGLBoolean eglQueryStreamKHRImpl(EGLDisplay dpy, EGLStreamKHR stream,
-                                 EGLenum attribute, EGLint* value)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglQueryStreamKHR)
-    {
-        result = system->egl.eglQueryStreamKHR(dpy, stream, attribute, value);
-    }
-    return result;
-}
-
-EGLBoolean eglQueryStreamu64KHRImpl(EGLDisplay dpy, EGLStreamKHR stream,
-                                    EGLenum attribute, EGLuint64KHR* value)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglQueryStreamu64KHR)
-    {
-        result =
-            system->egl.eglQueryStreamu64KHR(dpy, stream, attribute, value);
-    }
-    return result;
-}
-
-EGLBoolean eglQueryStreamTimeKHRImpl(EGLDisplay dpy, EGLStreamKHR stream,
-                                     EGLenum attribute, EGLTimeKHR* value)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglQueryStreamTimeKHR)
-    {
-        result =
-            system->egl.eglQueryStreamTimeKHR(dpy, stream, attribute, value);
-    }
-    return result;
-}
-
-EGLSurface eglCreateStreamProducerSurfaceKHRImpl(EGLDisplay dpy,
-                                                 EGLConfig config,
-                                                 EGLStreamKHR stream,
-                                                 const EGLint* attrib_list)
-{
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglCreateStreamProducerSurfaceKHR)
-    {
-        EGLSurface surface = system->egl.eglCreateStreamProducerSurfaceKHR(
-            dpy, config, stream, attrib_list);
-        return surface;
-    }
-    return EGL_NO_SURFACE;
-}
-
-EGLBoolean eglStreamConsumerGLTextureExternalKHRImpl(EGLDisplay dpy,
-                                                     EGLStreamKHR stream)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglStreamConsumerGLTextureExternalKHR)
-    {
-        result = system->egl.eglStreamConsumerGLTextureExternalKHR(dpy, stream);
-    }
-    return result;
-}
-
-EGLBoolean eglStreamConsumerAcquireKHRImpl(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglStreamConsumerAcquireKHR)
-    {
-        result = system->egl.eglStreamConsumerAcquireKHR(dpy, stream);
-    }
-    return result;
-}
-
-EGLBoolean eglStreamConsumerReleaseKHRImpl(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    EGLBoolean result = EGL_FALSE;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglStreamConsumerReleaseKHR)
-    {
-        result = system->egl.eglStreamConsumerReleaseKHR(dpy, stream);
-    }
-    return result;
-}
-
-EGLNativeFileDescriptorKHR
-eglGetStreamFileDescriptorKHRImpl(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    EGLNativeFileDescriptorKHR result = EGL_NO_FILE_DESCRIPTOR_KHR;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglGetStreamFileDescriptorKHR)
-    {
-        result = system->egl.eglGetStreamFileDescriptorKHR(dpy, stream);
-    }
-    return result;
-}
-
-EGLStreamKHR eglCreateStreamFromFileDescriptorKHRImpl(
-    EGLDisplay dpy, EGLNativeFileDescriptorKHR file_descriptor)
-{
-    EGLStreamKHR result = EGL_NO_STREAM_KHR;
-    auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglCreateStreamFromFileDescriptorKHR)
-    {
-        result = system->egl.eglCreateStreamFromFileDescriptorKHR(
-            dpy, file_descriptor);
-    }
-    return result;
 }
 
 // ----------------------------------------------------------------------------
@@ -1184,8 +1029,7 @@ const GLubyte* glGetStringImpl(GLenum name)
         EGLContext ctx = system->egl.eglGetCurrentContext();
         if (ctx)
         {
-            auto ctx_wrap = egl_context_t::get(ctx);
-            if (ctx_wrap)
+            if (auto ctx_wrap = egl_context_t::get(ctx); ctx_wrap)
             {
                 return (const GLubyte*)ctx_wrap->gl_extensions.c_str();
             }
@@ -1231,8 +1075,7 @@ void glGetBooleanvImpl(GLenum pname, GLboolean* data)
         EGLContext ctx = system->egl.eglGetCurrentContext();
         if (ctx)
         {
-            auto ctx_wrap = egl_context_t::get(ctx);
-            if (ctx_wrap)
+            if (auto ctx_wrap = egl_context_t::get(ctx); ctx_wrap)
             {
                 *data = (GLboolean)ctx_wrap->tokenized_gl_extensions.size() > 0;
                 return;
@@ -1275,8 +1118,7 @@ void glGetIntegervImpl(GLenum pname, GLint* data)
         EGLContext ctx = system->egl.eglGetCurrentContext();
         if (ctx)
         {
-            auto ctx_wrap = egl_context_t::get(ctx);
-            if (ctx_wrap)
+            if (auto ctx_wrap = egl_context_t::get(ctx); ctx_wrap)
             {
                 *data = (GLint)ctx_wrap->tokenized_gl_extensions.size();
                 return;
@@ -1297,8 +1139,7 @@ void glGetInteger64vImpl(GLenum pname, GLint64* data)
         EGLContext ctx = system->egl.eglGetCurrentContext();
         if (ctx)
         {
-            auto ctx_wrap = egl_context_t::get(ctx);
-            if (ctx_wrap)
+            if (auto ctx_wrap = egl_context_t::get(ctx); ctx_wrap)
             {
                 *data = (GLint64)ctx_wrap->tokenized_gl_extensions.size();
                 return;

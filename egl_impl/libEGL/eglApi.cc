@@ -162,14 +162,6 @@ EGLBoolean eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
     return system->platform.eglQuerySurface(dpy, surface, attribute, value);
 }
 
-void EGLAPI eglBeginFrame(EGLDisplay dpy, EGLSurface surface)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    system->platform.eglBeginFrame(dpy, surface);
-}
-
 EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config,
                             EGLContext share_list, const EGLint* attrib_list)
 {
@@ -501,114 +493,6 @@ EGLBoolean eglGetSyncAttribKHR(EGLDisplay dpy, EGLSyncKHR sync,
     return system->platform.eglGetSyncAttribKHR(dpy, sync, attribute, value);
 }
 
-EGLStreamKHR eglCreateStreamKHR(EGLDisplay dpy, const EGLint* attrib_list)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglCreateStreamKHR(dpy, attrib_list);
-}
-
-EGLBoolean eglDestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglDestroyStreamKHR(dpy, stream);
-}
-
-EGLBoolean eglStreamAttribKHR(EGLDisplay dpy, EGLStreamKHR stream,
-                              EGLenum attribute, EGLint value)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglStreamAttribKHR(dpy, stream, attribute, value);
-}
-
-EGLBoolean eglQueryStreamKHR(EGLDisplay dpy, EGLStreamKHR stream,
-                             EGLenum attribute, EGLint* value)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglQueryStreamKHR(dpy, stream, attribute, value);
-}
-
-EGLBoolean eglQueryStreamu64KHR(EGLDisplay dpy, EGLStreamKHR stream,
-                                EGLenum attribute, EGLuint64KHR* value)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglQueryStreamu64KHR(dpy, stream, attribute, value);
-}
-
-EGLBoolean eglQueryStreamTimeKHR(EGLDisplay dpy, EGLStreamKHR stream,
-                                 EGLenum attribute, EGLTimeKHR* value)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglQueryStreamTimeKHR(dpy, stream, attribute, value);
-}
-
-EGLSurface eglCreateStreamProducerSurfaceKHR(EGLDisplay dpy, EGLConfig config,
-                                             EGLStreamKHR stream,
-                                             const EGLint* attrib_list)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglCreateStreamProducerSurfaceKHR(dpy, config, stream,
-                                                           attrib_list);
-}
-
-EGLBoolean eglStreamConsumerGLTextureExternalKHR(EGLDisplay dpy,
-                                                 EGLStreamKHR stream)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglStreamConsumerGLTextureExternalKHR(dpy, stream);
-}
-
-EGLBoolean eglStreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglStreamConsumerAcquireKHR(dpy, stream);
-}
-
-EGLBoolean eglStreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR stream)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglStreamConsumerReleaseKHR(dpy, stream);
-}
-
-EGLNativeFileDescriptorKHR eglGetStreamFileDescriptorKHR(EGLDisplay dpy,
-                                                         EGLStreamKHR stream)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglGetStreamFileDescriptorKHR(dpy, stream);
-}
-
-EGLStreamKHR
-eglCreateStreamFromFileDescriptorKHR(EGLDisplay dpy,
-                                     EGLNativeFileDescriptorKHR file_descriptor)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->platform.eglCreateStreamFromFileDescriptorKHR(dpy,
-                                                              file_descriptor);
-}
-
 EGLint eglWaitSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags)
 {
     clearError();
@@ -621,13 +505,4 @@ EGLBoolean eglWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->platform.eglWaitSync(dpy, sync, flags);
-}
-
-EGLBoolean eglSetDamageRegionKHR(EGLDisplay dpy, EGLSurface surface,
-                                 EGLint* rects, EGLint n_rects)
-{
-    clearError();
-
-    auto system = egl_system_t::loader::getInstance().system;
-    return system->egl.eglSetDamageRegionKHR(dpy, surface, rects, n_rects);
 }

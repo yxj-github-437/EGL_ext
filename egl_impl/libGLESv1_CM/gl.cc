@@ -29,82 +29,6 @@
 using namespace egl_wrapper;
 
 // ----------------------------------------------------------------------------
-// extensions for the framework
-// ----------------------------------------------------------------------------
-
-extern "C" {
-GL_API void GL_APIENTRY glColorPointerBounds(GLint size, GLenum type,
-                                             GLsizei stride, const GLvoid* ptr,
-                                             GLsizei count);
-GL_API void GL_APIENTRY glNormalPointerBounds(GLenum type, GLsizei stride,
-                                              const GLvoid* pointer,
-                                              GLsizei count);
-GL_API void GL_APIENTRY glTexCoordPointerBounds(GLint size, GLenum type,
-                                                GLsizei stride,
-                                                const GLvoid* pointer,
-                                                GLsizei count);
-GL_API void GL_APIENTRY glVertexPointerBounds(GLint size, GLenum type,
-                                              GLsizei stride,
-                                              const GLvoid* pointer,
-                                              GLsizei count);
-GL_API void GL_APIENTRY glPointSizePointerOESBounds(GLenum type, GLsizei stride,
-                                                    const GLvoid* pointer,
-                                                    GLsizei count);
-GL_API void GL_APIENTRY glMatrixIndexPointerOESBounds(GLint size, GLenum type,
-                                                      GLsizei stride,
-                                                      const GLvoid* pointer,
-                                                      GLsizei count);
-GL_API void GL_APIENTRY glWeightPointerOESBounds(GLint size, GLenum type,
-                                                 GLsizei stride,
-                                                 const GLvoid* pointer,
-                                                 GLsizei count);
-}
-
-void glColorPointerBounds(GLint size, GLenum type, GLsizei stride,
-                          const GLvoid* ptr, GLsizei /*count*/)
-{
-    glColorPointer(size, type, stride, ptr);
-}
-void glNormalPointerBounds(GLenum type, GLsizei stride, const GLvoid* pointer,
-                           GLsizei /*count*/)
-{
-    glNormalPointer(type, stride, pointer);
-}
-void glTexCoordPointerBounds(GLint size, GLenum type, GLsizei stride,
-                             const GLvoid* pointer, GLsizei /*count*/)
-{
-    glTexCoordPointer(size, type, stride, pointer);
-}
-void glVertexPointerBounds(GLint size, GLenum type, GLsizei stride,
-                           const GLvoid* pointer, GLsizei /*count*/)
-{
-    glVertexPointer(size, type, stride, pointer);
-}
-
-void GL_APIENTRY glPointSizePointerOESBounds(GLenum type, GLsizei stride,
-                                             const GLvoid* pointer,
-                                             GLsizei /*count*/)
-{
-    glPointSizePointerOES(type, stride, pointer);
-}
-
-GL_API void GL_APIENTRY glMatrixIndexPointerOESBounds(GLint size, GLenum type,
-                                                      GLsizei stride,
-                                                      const GLvoid* pointer,
-                                                      GLsizei /*count*/)
-{
-    glMatrixIndexPointerOES(size, type, stride, pointer);
-}
-
-GL_API void GL_APIENTRY glWeightPointerOESBounds(GLint size, GLenum type,
-                                                 GLsizei stride,
-                                                 const GLvoid* pointer,
-                                                 GLsizei /*count*/)
-{
-    glWeightPointerOES(size, type, stride, pointer);
-}
-
-// ----------------------------------------------------------------------------
 // Actual GL entry-points
 // ----------------------------------------------------------------------------
 
@@ -142,7 +66,7 @@ GL_API void GL_APIENTRY glWeightPointerOESBounds(GLint size, GLenum type,
 extern "C" {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "gl_api.in"
-#include "glext_api.in"
+// #include "glext_api.in"
 #pragma GCC diagnostic warning "-Wunused-parameter"
 }
 

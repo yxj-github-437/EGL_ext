@@ -31,15 +31,6 @@
 #include <GLES3/gl31.h>
 #include <GLES3/gl32.h>
 
-#undef NELEM
-#define NELEM(x) (sizeof(x) / sizeof(x[0]))
-
-// maximum number of GL extensions that can be used simultaneously in
-// a given process. this limitation exists because we need to have
-// a static function for each extension and currently these static functions
-// are generated at compile time.
-#define MAX_NUMBER_OF_GL_EXTENSIONS 256
-
 // ----------------------------------------------------------------------------
 namespace egl_wrapper {
 // ----------------------------------------------------------------------------
@@ -63,9 +54,6 @@ struct gl_hooks_t {
     struct gl_t {
         #include "entries.in"
     } gl;
-    struct gl_ext_t {
-        __eglMustCastToProperFunctionPointerType extensions[MAX_NUMBER_OF_GL_EXTENSIONS];
-    } ext;
 };
 // clang-format on
 

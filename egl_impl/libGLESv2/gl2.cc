@@ -127,7 +127,7 @@ class check_gl_rval {
 extern "C" {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "gl2_api.in"
-#include "gl2ext_api.in"
+// #include "gl2ext_api.in"
 #pragma GCC diagnostic warning "-Wunused-parameter"
 }
 

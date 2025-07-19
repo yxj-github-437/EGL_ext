@@ -38,13 +38,6 @@ using namespace egl_wrapper;
 // ----------------------------------------------------------------------------
 
 namespace egl_wrapper {
-
-struct extension_map_t
-{
-    const char* name;
-    __eglMustCastToProperFunctionPointerType address;
-};
-
 /*
  * This is the list of EGL extensions exposed to applications.
  *
@@ -78,75 +71,7 @@ inline EGLBoolean eglBindWaylandDisplayWLImpl (EGLDisplay dpy, struct wl_display
 inline EGLBoolean eglUnbindWaylandDisplayWLImpl (EGLDisplay dpy, struct wl_display *display);
 inline EGLBoolean eglQueryWaylandBufferWLImpl (EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 
-/*
- * EGL Extensions entry-points exposed to 3rd party applications
- * (keep in sync with gExtensionString above)
- *
- */
-static const extension_map_t sExtensionMap[] = {
-    // EGL_KHR_lock_surface
-    { "eglLockSurfaceKHR", (__eglMustCastToProperFunctionPointerType)&eglLockSurfaceKHR },
-    { "eglUnlockSurfaceKHR", (__eglMustCastToProperFunctionPointerType)&eglUnlockSurfaceKHR },
-
-    // EGL_KHR_image, EGL_KHR_image_base
-    { "eglCreateImageKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateImageKHR },
-    { "eglDestroyImageKHR", (__eglMustCastToProperFunctionPointerType)&eglDestroyImageKHR },
-
-    // EGL_EXT_platform_base
-    { "eglGetPlatformDisplayEXT", (__eglMustCastToProperFunctionPointerType)&eglGetPlatformDisplayEXTImpl },
-    { "eglCreatePlatformWindowSurfaceEXT", (__eglMustCastToProperFunctionPointerType)&eglCreatePlatformWindowSurfaceEXTImpl },
-//    { "eglCreatePlatformPixmapSurfaceEXT", (__eglMustCastToProperFunctionPointerType)&eglCreatePlatformPixmapSurfaceEXT },
-
-    // EGL_WL_bind_wayland_display
-    { "eglBindWaylandDisplayWL", (__eglMustCastToProperFunctionPointerType)&eglBindWaylandDisplayWLImpl },
-    { "eglUnbindWaylandDisplayWL", (__eglMustCastToProperFunctionPointerType)&eglUnbindWaylandDisplayWLImpl },
-    { "eglQueryWaylandBufferWL", (__eglMustCastToProperFunctionPointerType)&eglQueryWaylandBufferWLImpl },
-
-    // EGL_KHR_reusable_sync, EGL_KHR_fence_sync
-    { "eglCreateSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateSyncKHR },
-    { "eglDestroySyncKHR", (__eglMustCastToProperFunctionPointerType)&eglDestroySyncKHR },
-    { "eglClientWaitSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglClientWaitSyncKHR },
-    { "eglSignalSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglSignalSyncKHR },
-    { "eglGetSyncAttribKHR", (__eglMustCastToProperFunctionPointerType)&eglGetSyncAttribKHR },
-
-    // EGL_KHR_wait_sync
-    { "eglWaitSyncKHR", (__eglMustCastToProperFunctionPointerType)&eglWaitSyncKHR },
-
-    // EGL_KHR_partial_update
-    { "eglSetDamageRegionKHR", (__eglMustCastToProperFunctionPointerType)&eglSetDamageRegionKHR },
-
-    { "eglCreateStreamKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateStreamKHR },
-    { "eglDestroyStreamKHR", (__eglMustCastToProperFunctionPointerType)&eglDestroyStreamKHR },
-    { "eglStreamAttribKHR", (__eglMustCastToProperFunctionPointerType)&eglStreamAttribKHR },
-    { "eglQueryStreamKHR", (__eglMustCastToProperFunctionPointerType)&eglQueryStreamKHR },
-    { "eglQueryStreamu64KHR", (__eglMustCastToProperFunctionPointerType)&eglQueryStreamu64KHR },
-    { "eglQueryStreamTimeKHR", (__eglMustCastToProperFunctionPointerType)&eglQueryStreamTimeKHR },
-    { "eglCreateStreamProducerSurfaceKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateStreamProducerSurfaceKHR },
-    { "eglStreamConsumerGLTextureExternalKHR", (__eglMustCastToProperFunctionPointerType)&eglStreamConsumerGLTextureExternalKHR },
-    { "eglStreamConsumerAcquireKHR", (__eglMustCastToProperFunctionPointerType)&eglStreamConsumerAcquireKHR },
-    { "eglStreamConsumerReleaseKHR", (__eglMustCastToProperFunctionPointerType)&eglStreamConsumerReleaseKHR },
-    { "eglGetStreamFileDescriptorKHR", (__eglMustCastToProperFunctionPointerType)&eglGetStreamFileDescriptorKHR },
-    { "eglCreateStreamFromFileDescriptorKHR", (__eglMustCastToProperFunctionPointerType)&eglCreateStreamFromFileDescriptorKHR },
-};
-// clang-format on
-
-// accesses protected by sExtensionMapMutex
-static std::unordered_map<std::string, __eglMustCastToProperFunctionPointerType>
-    sGLExtensionMap;
-static std::unordered_map<std::string, int> sGLExtensionSlotMap;
-
-inline auto findProcAddress(const char* name, const extension_map_t* map,
-                            size_t n)
-{
-    for (uint32_t i = 0; i < n; i++)
-    {
-        if (!strcmp(name, map[i].name))
-        {
-            return map[i].address;
-        }
-    }
-    return (__eglMustCastToProperFunctionPointerType) nullptr;
-}
+__eglMustCastToProperFunctionPointerType findProcAddress(const char* name);
 
 // Note: This only works for existing GLenum's that are all 32bits.
 // If you have 64bit attributes (e.g. pointers) you shouldn't be calling this.
@@ -524,36 +449,11 @@ EGLint eglGetErrorImpl(void)
     return err;
 }
 
-inline __eglMustCastToProperFunctionPointerType
-findBuiltinWrapper(const char* procname)
-{
-    void* proc = nullptr;
-
-    auto& loader = egl_system_t::loader::getInstance();
-    proc = dlsym(loader.libEgl, procname);
-    if (proc)
-        return (__eglMustCastToProperFunctionPointerType)proc;
-
-    proc = dlsym(loader.libGles2, procname);
-    if (proc)
-        return (__eglMustCastToProperFunctionPointerType)proc;
-
-    proc = dlsym(loader.libGles1, procname);
-    if (proc)
-        return (__eglMustCastToProperFunctionPointerType)proc;
-
-    return nullptr;
-}
-
 __eglMustCastToProperFunctionPointerType
 eglGetProcAddressImpl(const char* procname)
 {
     __eglMustCastToProperFunctionPointerType addr;
-    addr = findProcAddress(procname, sExtensionMap, NELEM(sExtensionMap));
-    if (addr)
-        return addr;
-
-    addr = findBuiltinWrapper(procname);
+    addr = findProcAddress(procname);
     if (addr)
         return addr;
 
@@ -1427,5 +1327,55 @@ void fullPlatformImpl(platform_impl_t& pImpl)
 }
 #undef GL_ENTRY
 #undef EGL_ENTRY
+
+/*
+ * EGL entry-points exposed to 3rd party applications
+ *
+ */
+
+struct egl_entry_t
+{
+    const char* name;
+    __eglMustCastToProperFunctionPointerType address;
+};
+
+// clang-format off
+static const egl_entry_t sEntryMap[] = {
+#undef EGL_ENTRY
+#undef GL_ENTRY
+#define EGL_ENTRY(_r, _api, ...) {#_api, (__eglMustCastToProperFunctionPointerType)_api ## Impl},
+#define GL_ENTRY(_r, _api, ...)  {#_api, (__eglMustCastToProperFunctionPointerType)_api ## Impl},
+
+#include "loader/platform_entries.in"
+
+#undef GL_ENTRY
+#undef EGL_ENTRY
+
+    // EGL_KHR_image, EGL_KHR_image_base
+    { "eglCreateImageKHR", (__eglMustCastToProperFunctionPointerType)eglCreateImageKHR },
+    { "eglDestroyImageKHR", (__eglMustCastToProperFunctionPointerType)eglDestroyImageKHR },
+
+    // EGL_EXT_platform_base
+    { "eglGetPlatformDisplayEXT", (__eglMustCastToProperFunctionPointerType)eglGetPlatformDisplayEXTImpl },
+    { "eglCreatePlatformWindowSurfaceEXT", (__eglMustCastToProperFunctionPointerType)eglCreatePlatformWindowSurfaceEXTImpl },
+
+    // EGL_WL_bind_wayland_display
+    { "eglBindWaylandDisplayWL", (__eglMustCastToProperFunctionPointerType)eglBindWaylandDisplayWLImpl },
+    { "eglUnbindWaylandDisplayWL", (__eglMustCastToProperFunctionPointerType)eglUnbindWaylandDisplayWLImpl },
+    { "eglQueryWaylandBufferWL", (__eglMustCastToProperFunctionPointerType)eglQueryWaylandBufferWLImpl },
+};
+// clang-format on
+
+__eglMustCastToProperFunctionPointerType findProcAddress(const char* name)
+{
+    for (auto& map : sEntryMap)
+    {
+        if (!strcmp(name, map.name))
+        {
+            return map.address;
+        }
+    }
+    return nullptr;
+}
 
 } // namespace egl_wrapper

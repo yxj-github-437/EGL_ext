@@ -55,31 +55,3 @@ EGL_ENTRY(EGLBoolean, eglDestroySync, EGLDisplay, EGLSync)
 EGL_ENTRY(EGLint, eglClientWaitSync, EGLDisplay, EGLSync, EGLint, EGLTimeKHR)
 EGL_ENTRY(EGLBoolean, eglGetSyncAttrib, EGLDisplay, EGLSync, EGLint, EGLAttrib *)
 EGL_ENTRY(EGLBoolean, eglWaitSync, EGLDisplay, EGLSync, EGLint)
-
-/* EGL_EGLEXT_VERSION 3 */
-
-EGL_ENTRY(EGLBoolean,  eglLockSurfaceKHR,   EGLDisplay, EGLSurface, const EGLint *)
-EGL_ENTRY(EGLBoolean,  eglUnlockSurfaceKHR, EGLDisplay, EGLSurface)
-EGL_ENTRY(EGLImageKHR, eglCreateImageKHR,   EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint *)
-EGL_ENTRY(EGLBoolean,  eglDestroyImageKHR,  EGLDisplay, EGLImageKHR)
-
-/* EGL_EGLEXT_VERSION 5 */
-
-EGL_ENTRY(EGLSyncKHR,   eglCreateSyncKHR,       EGLDisplay, EGLenum, const EGLint *)
-EGL_ENTRY(EGLBoolean,   eglDestroySyncKHR,      EGLDisplay, EGLSyncKHR)
-EGL_ENTRY(EGLint,       eglClientWaitSyncKHR,   EGLDisplay, EGLSyncKHR, EGLint, EGLTimeKHR)
-EGL_ENTRY(EGLBoolean,   eglSignalSyncKHR,       EGLDisplay, EGLSyncKHR, EGLenum)
-EGL_ENTRY(EGLBoolean,   eglGetSyncAttribKHR,    EGLDisplay, EGLSyncKHR, EGLint, EGLint *)
-
-/* EGL_EGLEXT_VERSION 15 */
-
-EGL_ENTRY(EGLint,       eglWaitSyncKHR,         EGLDisplay, EGLSyncKHR, EGLint)
-
-/* EGL_EGLEXT_VERSION 20170627 */
-EGL_ENTRY(EGLSurface, eglCreatePlatformWindowSurfaceEXT, EGLDisplay, EGLConfig, void *, const EGLint *)
-EGL_ENTRY(EGLSurface, eglCreatePlatformPixmapSurfaceEXT, EGLDisplay, EGLConfig, void *, const EGLint *)
-
-/* Partial update extensions */
-
-EGL_ENTRY(EGLBoolean, eglSwapBuffersWithDamageKHR, EGLDisplay, EGLSurface, const EGLint *, EGLint)
-EGL_ENTRY(EGLBoolean, eglSetDamageRegionKHR, EGLDisplay, EGLSurface, EGLint *, EGLint)

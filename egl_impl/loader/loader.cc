@@ -38,6 +38,16 @@ char const * const egl_names[] = {
     nullptr
 };
 
+char const * const egl_ext_names[] = {
+    #include "egl_ext_entries.in"
+    nullptr
+};
+
+char const* const gl_ext_name[] = {
+    #include "gles_ext_entries.in"
+    nullptr
+};
+
 char const * const platform_names[] = {
     #include "platform_entries.in"
     nullptr
@@ -92,16 +102,35 @@ egl_system_t::loader::loader() : getProcAddress(nullptr)
 
 void egl_system_t::loader::init_libegl_api()
 {
-    auto* egl = reinterpret_cast<__eglMustCastToProperFunctionPointerType*>(&system->egl);
+    auto* egl = reinterpret_cast<__eglMustCastToProperFunctionPointerType*>(
+        &system->egl);
     char const* const* api = egl_names;
     while (*api)
     {
-        if ((*egl = getProcAddress(*api)) == nullptr)
+        // For EGL <= 1.4, the eglGetProcAddress only get ext function; the
+        // EGL1.5 can get the any function.
+        *egl = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(
+            dlsym(libEgl, *api));
+        if (!(*egl) && (*egl = getProcAddress(*api)) == nullptr)
         {
             logger::log_debug() << "load egl function " << *api << " failed";
         }
 
         egl++;
+        api++;
+    }
+
+    api = egl_ext_names;
+    auto* ext = reinterpret_cast<__eglMustCastToProperFunctionPointerType*>(
+        &system->egl.ext);
+    while (*api)
+    {
+        if ((*ext = getProcAddress(*api)) == nullptr)
+        {
+            logger::log_debug() << "load egl function " << *api << " failed";
+        }
+
+        ext++;
         api++;
     }
 }
@@ -119,21 +148,42 @@ void egl_system_t::loader::init_libgles_api()
     {
         if (*api_1 && strcmp(*api, *api_1) == 0)
         {
-            if ((*gles1 = getProcAddress(*api_1)) == nullptr)
+            *gles1 = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(
+                dlsym(libGles1, *api_1));
+            if (!(*gles1) && (*gles1 = getProcAddress(*api_1)) == nullptr)
             {
                 logger::log_debug()
                     << "load gles1 function " << *api_1 << " failed";
             }
             api_1++;
-            gles1++;
         }
+        gles1++;
 
-        if ((*gles2 = getProcAddress(*api)) == nullptr)
         {
-            logger::log_debug() << "load gles2 function " << *api << " failed";
+            *gles2 = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(
+                dlsym(libGles2, *api));
+            if (!(*gles2) && (*gles2 = getProcAddress(*api)) == nullptr)
+            {
+                logger::log_debug()
+                    << "load gles2 function " << *api << " failed";
+            }
         }
         api++;
         gles2++;
+    }
+
+    api = gl_ext_name;
+    auto* glext = reinterpret_cast<__eglMustCastToProperFunctionPointerType*>(
+        &system->glext);
+    while (*api)
+    {
+        if ((*glext = getProcAddress(*api)) == nullptr)
+        {
+            logger::log_debug()
+                << "load gles ext function " << *api << " failed";
+        }
+        api++;
+        glext++;
     }
 }
 

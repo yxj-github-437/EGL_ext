@@ -13,8 +13,9 @@ class egl_system_t {
 
   public:
     enum { GLESv1_INDEX = 0, GLESv2_INDEX = 1 };
-    gl_hooks_t hooks[2];
-    egl_t egl;
+    gl_hooks_t hooks[2] = {};
+    gl_hooks_t::gl_ext_t glext = {};
+    egl_t egl = {};
 
     // Functions implemented or redirected by platform libraries
     platform_impl_t platform;

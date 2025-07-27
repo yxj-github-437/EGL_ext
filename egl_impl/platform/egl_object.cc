@@ -270,13 +270,13 @@ void egl_context_t::makeCurrent(EGLSurface draw, EGLSurface read)
                     if (!system->hooks[version].gl.glGenFramebuffers)
                     {
                         glGenFramebuffers =
-                            system->hooks[version].gl.glGenFramebuffersOES;
+                            system->glext.glGenFramebuffersOES;
                         glBindFramebuffer =
-                            system->hooks[version].gl.glBindFramebufferOES;
+                            system->glext.glBindFramebufferOES;
                         glFramebufferTexture2D =
-                            system->hooks[version].gl.glFramebufferTexture2DOES;
+                            system->glext.glFramebufferTexture2DOES;
                         glDeleteFramebuffers =
-                            system->hooks[version].gl.glDeleteFramebuffersOES;
+                            system->glext.glDeleteFramebuffersOES;
                     }
                     glGenFramebuffers(1, &fbo);
                     glBindFramebuffer(GL_FRAMEBUFFER, fbo);

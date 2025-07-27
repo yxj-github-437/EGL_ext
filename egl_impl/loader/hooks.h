@@ -48,12 +48,18 @@ struct platform_impl_t {
 
 struct egl_t {
     #include "egl_entries.in"
+    struct {
+        #include "egl_ext_entries.in"
+    } ext;
 };
 
 struct gl_hooks_t {
     struct gl_t {
         #include "entries.in"
     } gl;
+    struct gl_ext_t {
+        #include "gles_ext_entries.in"
+    };
 };
 // clang-format on
 

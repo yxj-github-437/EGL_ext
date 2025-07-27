@@ -24,7 +24,6 @@
 
 #include "logger.h"
 #include "loader/loader.h"
-#include "platform/egl_tls.h"
 
 using namespace egl_wrapper;
 
@@ -42,7 +41,8 @@ using namespace egl_wrapper;
 #define API_ENTRY(_api) _api
 
 #define CALL_GL_API_INTERNAL_CALL(_api, ...)                                   \
-    gl_hooks_t::gl_t const* const _c = &getGlThreadSpecific()->gl;             \
+    gl_hooks_t::gl_t const* const _c =                                         \
+        &egl_get_system()->hooks[egl_system_t::GLESv1_INDEX].gl;               \
     if (_c) [[likely]]                                                         \
         return _c->_api(__VA_ARGS__);                                          \
     else                                                                       \

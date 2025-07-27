@@ -61,15 +61,7 @@ const char* const gClientExtensionString =
         "EGL_KHR_platform_gbm "
         "EGL_EXT_platform_wayland "
         "EGL_KHR_platform_wayland ";
-
-
-inline EGLDisplay eglGetPlatformDisplayEXTImpl(EGLenum platform, void* native_display,
-    const EGLint* attrib_list);
-inline EGLSurface eglCreatePlatformWindowSurfaceEXTImpl(EGLDisplay dpy, EGLConfig config, void *native_window, const EGLint *attrib_list);
-
-inline EGLBoolean eglBindWaylandDisplayWLImpl (EGLDisplay dpy, struct wl_display *display);
-inline EGLBoolean eglUnbindWaylandDisplayWLImpl (EGLDisplay dpy, struct wl_display *display);
-inline EGLBoolean eglQueryWaylandBufferWLImpl (EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+// clang-format on
 
 __eglMustCastToProperFunctionPointerType findProcAddress(const char* name);
 
@@ -99,6 +91,11 @@ inline void convertInts(const EGLint* attrib_list,
     newList.push_back(EGL_NONE);
 }
 
+inline void clearError()
+{
+    egl_tls_t::clearError();
+}
+
 // ----------------------------------------------------------------------------
 
 auto setGLHooksThreadSpecific = setGlThreadSpecific;
@@ -117,6 +114,7 @@ static EGLDisplay eglGetPlatformDisplayTmpl(EGLenum platform,
 
 EGLDisplay eglGetDisplayImpl(EGLNativeDisplayType display)
 {
+    clearError();
     return eglGetPlatformDisplayTmpl(egl_display_t::getNativePlatform(display),
                                      display, nullptr);
 }
@@ -124,6 +122,7 @@ EGLDisplay eglGetDisplayImpl(EGLNativeDisplayType display)
 EGLDisplay eglGetPlatformDisplayImpl(EGLenum platform, void* native_display,
                                      const EGLAttrib* attrib_list)
 {
+    clearError();
     return eglGetPlatformDisplayTmpl(
         platform, static_cast<EGLNativeDisplayType>(native_display),
         attrib_list);
@@ -132,6 +131,7 @@ EGLDisplay eglGetPlatformDisplayImpl(EGLenum platform, void* native_display,
 EGLDisplay eglGetPlatformDisplayEXTImpl(EGLenum platform, void* native_display,
                                         const EGLint* attrib_list)
 {
+    clearError();
     std::vector<EGLAttrib> convertedInts{};
     convertInts(attrib_list, convertedInts);
 
@@ -146,6 +146,7 @@ EGLDisplay eglGetPlatformDisplayEXTImpl(EGLenum platform, void* native_display,
 
 EGLBoolean eglInitializeImpl(EGLDisplay dpy, EGLint* major, EGLint* minor)
 {
+    clearError();
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, (EGLBoolean)EGL_FALSE);
@@ -157,6 +158,7 @@ EGLBoolean eglInitializeImpl(EGLDisplay dpy, EGLint* major, EGLint* minor)
 
 EGLBoolean eglTerminateImpl(EGLDisplay dpy)
 {
+    clearError();
     // NOTE: don't unload the drivers b/c some APIs can be called
     // after eglTerminate() has been called. eglTerminate() only
     // terminates an EGLDisplay, not a EGL itself.
@@ -176,6 +178,7 @@ EGLBoolean eglTerminateImpl(EGLDisplay dpy)
 EGLBoolean eglGetConfigsImpl(EGLDisplay dpy, EGLConfig* configs,
                              EGLint config_size, EGLint* num_config)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglGetConfigs(dpy, configs, config_size, num_config);
 }
@@ -184,6 +187,7 @@ EGLBoolean eglChooseConfigImpl(EGLDisplay dpy, const EGLint* attrib_list,
                                EGLConfig* configs, EGLint config_size,
                                EGLint* num_config)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglChooseConfig(dpy, attrib_list, configs, config_size,
                                        num_config);
@@ -192,6 +196,7 @@ EGLBoolean eglChooseConfigImpl(EGLDisplay dpy, const EGLint* attrib_list,
 EGLBoolean eglGetConfigAttribImpl(EGLDisplay dpy, EGLConfig config,
                                   EGLint attribute, EGLint* value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglGetConfigAttrib(dpy, config, attribute, value);
 }
@@ -220,8 +225,15 @@ EGLSurface eglCreateWindowSurfaceTmpl(egl_display_t* dp, EGLConfig config,
                                        attrib_list);
     }
 
-    std::lock_guard lock{mutex};
-    g_surface_window_map.insert({rval, native_window});
+    if (rval != EGL_NO_SURFACE)
+    {
+        std::lock_guard lock{mutex};
+        g_surface_window_map.insert({rval, native_window});
+    }
+    else if (dp->platform_wrapper && native_window)
+    {
+        dp->platform_wrapper->destroy_window(native_window);
+    }
     return rval;
 }
 
@@ -229,6 +241,7 @@ EGLSurface eglCreateWindowSurfaceImpl(EGLDisplay dpy, EGLConfig config,
                                       NativeWindowType window,
                                       const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     egl_display_t* dp = get_display(dpy);
     if (!dp)
@@ -242,6 +255,7 @@ EGLSurface eglCreatePlatformWindowSurfaceImpl(EGLDisplay dpy, EGLConfig config,
                                               void* native_window,
                                               const EGLAttrib* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     egl_display_t* dp = get_display(dpy);
     if (!dp)
@@ -249,12 +263,18 @@ EGLSurface eglCreatePlatformWindowSurfaceImpl(EGLDisplay dpy, EGLConfig config,
 
     std::vector<EGLint> convertedAttribs{};
     convertAttribs(attrib_list, convertedAttribs);
-    if (system->egl.eglCreatePlatformWindowSurfaceEXT)
+    if (system->egl.eglCreatePlatformWindowSurface)
+    {
+        return eglCreateWindowSurfaceTmpl(
+            dp, config, static_cast<ANativeWindow*>(native_window), attrib_list,
+            system->egl.eglCreatePlatformWindowSurface);
+    }
+    else if (system->egl.ext.eglCreatePlatformWindowSurfaceEXT)
     {
         return eglCreateWindowSurfaceTmpl(
             dp, config, static_cast<ANativeWindow*>(native_window),
             convertedAttribs.data(),
-            system->egl.eglCreatePlatformWindowSurfaceEXT);
+            system->egl.ext.eglCreatePlatformWindowSurfaceEXT);
     }
     else
     {
@@ -268,6 +288,7 @@ EGLSurface eglCreatePlatformPixmapSurfaceImpl(EGLDisplay dpy, EGLConfig config,
                                               void* native_pixmap,
                                               const EGLAttrib* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglCreatePlatformPixmapSurface(
         dpy, config, native_pixmap, attrib_list);
@@ -277,6 +298,7 @@ EGLSurface eglCreatePixmapSurfaceImpl(EGLDisplay dpy, EGLConfig config,
                                       NativePixmapType pixmap,
                                       const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglCreatePixmapSurface(dpy, config, pixmap, attrib_list);
 }
@@ -284,6 +306,7 @@ EGLSurface eglCreatePixmapSurfaceImpl(EGLDisplay dpy, EGLConfig config,
 EGLSurface eglCreatePbufferSurfaceImpl(EGLDisplay dpy, EGLConfig config,
                                        const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglCreatePbufferSurface(dpy, config, attrib_list);
 }
@@ -293,17 +316,27 @@ EGLSurface eglCreatePlatformWindowSurfaceEXTImpl(EGLDisplay dpy,
                                                  void* native_window,
                                                  const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_NO_SURFACE);
 
     EGLSurface rval = EGL_NO_SURFACE;
-    if (system->egl.eglCreatePlatformWindowSurfaceEXT)
+    if (system->egl.eglCreatePlatformWindowSurface)
+    {
+        std::vector<EGLAttrib> convertedAttribs{};
+        convertInts(attrib_list, convertedAttribs);
+        rval = eglCreateWindowSurfaceTmpl(
+            dp, config, static_cast<ANativeWindow*>(native_window),
+            convertedAttribs.data(),
+            system->egl.eglCreatePlatformWindowSurface);
+    }
+    else if (system->egl.ext.eglCreatePlatformWindowSurfaceEXT)
     {
         rval = eglCreateWindowSurfaceTmpl(
             dp, config, static_cast<ANativeWindow*>(native_window), attrib_list,
-            system->egl.eglCreatePlatformWindowSurfaceEXT);
+            system->egl.ext.eglCreatePlatformWindowSurfaceEXT);
     }
     else
     {
@@ -316,6 +349,7 @@ EGLSurface eglCreatePlatformWindowSurfaceEXTImpl(EGLDisplay dpy,
 
 EGLBoolean eglDestroySurfaceImpl(EGLDisplay dpy, EGLSurface surface)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     egl_display_t* dp = get_display(dpy);
     if (!dp)
@@ -343,6 +377,7 @@ EGLBoolean eglDestroySurfaceImpl(EGLDisplay dpy, EGLSurface surface)
 EGLBoolean eglQuerySurfaceImpl(EGLDisplay dpy, EGLSurface surface,
                                EGLint attribute, EGLint* value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglQuerySurface(dpy, surface, attribute, value);
@@ -356,18 +391,21 @@ EGLContext eglCreateContextImpl(EGLDisplay dpy, EGLConfig config,
                                 EGLContext share_list,
                                 const EGLint* attrib_list)
 {
+    clearError();
     return egl_context_t::createNativeContext(dpy, config, share_list,
                                               attrib_list);
 }
 
 EGLBoolean eglDestroyContextImpl(EGLDisplay dpy, EGLContext ctx)
 {
+    clearError();
     return egl_context_t::destroy(dpy, ctx);
 }
 
 EGLBoolean eglMakeCurrentImpl(EGLDisplay dpy, EGLSurface draw, EGLSurface read,
                               EGLContext ctx)
 {
+    clearError();
     if (!egl_display_t::get(dpy))
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
 
@@ -395,36 +433,42 @@ EGLBoolean eglMakeCurrentImpl(EGLDisplay dpy, EGLSurface draw, EGLSurface read,
 EGLBoolean eglQueryContextImpl(EGLDisplay dpy, EGLContext ctx, EGLint attribute,
                                EGLint* value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglQueryContext(dpy, ctx, attribute, value);
 }
 
 EGLContext eglGetCurrentContextImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglGetCurrentContext();
 }
 
 EGLSurface eglGetCurrentSurfaceImpl(EGLint readdraw)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglGetCurrentSurface(readdraw);
 }
 
 EGLDisplay eglGetCurrentDisplayImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglGetCurrentDisplay();
 }
 
 EGLBoolean eglWaitGLImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return system->egl.eglWaitGL();
 }
 
 EGLBoolean eglWaitNativeImpl(EGLint engine)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglWaitNative(engine);
@@ -445,6 +489,7 @@ EGLint eglGetErrorImpl(void)
 __eglMustCastToProperFunctionPointerType
 eglGetProcAddressImpl(const char* procname)
 {
+    clearError();
     __eglMustCastToProperFunctionPointerType addr;
     addr = findProcAddress(procname);
     if (addr)
@@ -460,6 +505,7 @@ eglGetProcAddressImpl(const char* procname)
 EGLBoolean eglSwapBuffersWithDamageKHRImpl(EGLDisplay dpy, EGLSurface draw,
                                            const EGLint* rects, EGLint n_rects)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     EGLBoolean rval = EGL_TRUE;
     egl_display_t* dp = get_display(dpy);
@@ -477,10 +523,10 @@ EGLBoolean eglSwapBuffersWithDamageKHRImpl(EGLDisplay dpy, EGLSurface draw,
     {
         dp->platform_wrapper->prepare_swap(native_window, rects, n_rects);
     }
-    if (system->egl.eglSwapBuffersWithDamageKHR)
+    if (system->egl.ext.eglSwapBuffersWithDamageKHR)
     {
-        rval =
-            system->egl.eglSwapBuffersWithDamageKHR(dpy, draw, rects, n_rects);
+        rval = system->egl.ext.eglSwapBuffersWithDamageKHR(dpy, draw, rects,
+                                                           n_rects);
     }
     else
     {
@@ -494,11 +540,12 @@ EGLBoolean eglSwapBuffersWithDamageKHRImpl(EGLDisplay dpy, EGLSurface draw,
         return rval;
     }
 
-    if (system->egl.eglCreateSyncKHR)
+    if (system->egl.ext.eglCreateSyncKHR)
     {
-        auto sync = system->egl.eglCreateSync(dpy, EGL_SYNC_FENCE_KHR, nullptr);
-        system->egl.eglWaitSyncKHR(dpy, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR);
-        system->egl.eglDestroySyncKHR(dpy, sync);
+        auto sync = system->egl.ext.eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
+        system->egl.ext.eglWaitSyncKHR(dpy, sync,
+                                       EGL_SYNC_FLUSH_COMMANDS_BIT_KHR);
+        system->egl.ext.eglDestroySyncKHR(dpy, sync);
     }
 
     if (native_window && dp->platform_wrapper)
@@ -510,12 +557,14 @@ EGLBoolean eglSwapBuffersWithDamageKHRImpl(EGLDisplay dpy, EGLSurface draw,
 
 EGLBoolean eglSwapBuffersImpl(EGLDisplay dpy, EGLSurface surface)
 {
+    clearError();
     return eglSwapBuffersWithDamageKHRImpl(dpy, surface, nullptr, 0);
 }
 
 EGLBoolean eglCopyBuffersImpl(EGLDisplay dpy, EGLSurface surface,
                               NativePixmapType target)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglCopyBuffers(dpy, surface, target);
@@ -523,6 +572,7 @@ EGLBoolean eglCopyBuffersImpl(EGLDisplay dpy, EGLSurface surface,
 
 const char* eglQueryStringImpl(EGLDisplay dpy, EGLint name)
 {
+    clearError();
     static std::string extensions;
     auto system = egl_system_t::loader::getInstance().system;
     if (dpy == EGL_NO_DISPLAY && name == EGL_EXTENSIONS)
@@ -550,6 +600,7 @@ const char* eglQueryStringImpl(EGLDisplay dpy, EGLint name)
 EGLBoolean eglSurfaceAttribImpl(EGLDisplay dpy, EGLSurface surface,
                                 EGLint attribute, EGLint value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglSurfaceAttrib(dpy, surface, attribute, value);
@@ -558,6 +609,7 @@ EGLBoolean eglSurfaceAttribImpl(EGLDisplay dpy, EGLSurface surface,
 EGLBoolean eglBindTexImageImpl(EGLDisplay dpy, EGLSurface surface,
                                EGLint buffer)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglBindTexImage(dpy, surface, buffer);
@@ -566,6 +618,7 @@ EGLBoolean eglBindTexImageImpl(EGLDisplay dpy, EGLSurface surface,
 EGLBoolean eglReleaseTexImageImpl(EGLDisplay dpy, EGLSurface surface,
                                   EGLint buffer)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglReleaseTexImage(dpy, surface, buffer);
@@ -573,6 +626,7 @@ EGLBoolean eglReleaseTexImageImpl(EGLDisplay dpy, EGLSurface surface,
 
 EGLBoolean eglSwapIntervalImpl(EGLDisplay dpy, EGLint interval)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     return system->egl.eglSwapInterval(dpy, interval);
@@ -584,6 +638,7 @@ EGLBoolean eglSwapIntervalImpl(EGLDisplay dpy, EGLint interval)
 
 EGLBoolean eglWaitClientImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
 
     EGLBoolean res;
@@ -600,6 +655,7 @@ EGLBoolean eglWaitClientImpl(void)
 
 EGLBoolean eglBindAPIImpl(EGLenum api)
 {
+    clearError();
     // bind this API on all EGLs
     EGLBoolean res = EGL_TRUE;
     auto system = egl_system_t::loader::getInstance().system;
@@ -612,6 +668,7 @@ EGLBoolean eglBindAPIImpl(EGLenum api)
 
 EGLenum eglQueryAPIImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglQueryAPI)
     {
@@ -624,6 +681,7 @@ EGLenum eglQueryAPIImpl(void)
 
 EGLBoolean eglReleaseThreadImpl(void)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglReleaseThread)
     {
@@ -639,6 +697,7 @@ EGLSurface eglCreatePbufferFromClientBufferImpl(EGLDisplay dpy, EGLenum buftype,
                                                 EGLConfig config,
                                                 const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglCreatePbufferFromClientBuffer)
     {
@@ -651,6 +710,7 @@ EGLSurface eglCreatePbufferFromClientBufferImpl(EGLDisplay dpy, EGLenum buftype,
 EGLBoolean eglBindWaylandDisplayWLImpl(EGLDisplay dpy,
                                        struct wl_display* display)
 {
+    clearError();
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
@@ -665,6 +725,7 @@ EGLBoolean eglBindWaylandDisplayWLImpl(EGLDisplay dpy,
 EGLBoolean eglUnbindWaylandDisplayWLImpl(EGLDisplay dpy,
                                          struct wl_display* display)
 {
+    clearError();
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
@@ -681,6 +742,7 @@ EGLBoolean eglQueryWaylandBufferWLImpl(EGLDisplay dpy,
                                        struct wl_resource* buffer,
                                        EGLint attribute, EGLint* value)
 {
+    clearError();
     egl_display_t* dp = get_display(dpy);
     if (!dp)
         return setError(EGL_BAD_DISPLAY, EGL_FALSE);
@@ -724,20 +786,22 @@ EGLBoolean eglQueryWaylandBufferWLImpl(EGLDisplay dpy,
 EGLBoolean eglLockSurfaceKHRImpl(EGLDisplay dpy, EGLSurface surface,
                                  const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglLockSurfaceKHR)
+    if (system->egl.ext.eglLockSurfaceKHR)
     {
-        return system->egl.eglLockSurfaceKHR(dpy, surface, attrib_list);
+        return system->egl.ext.eglLockSurfaceKHR(dpy, surface, attrib_list);
     }
     return setError(EGL_BAD_DISPLAY, (EGLBoolean)EGL_FALSE);
 }
 
 EGLBoolean eglUnlockSurfaceKHRImpl(EGLDisplay dpy, EGLSurface surface)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglUnlockSurfaceKHR)
+    if (system->egl.ext.eglUnlockSurfaceKHR)
     {
-        return system->egl.eglUnlockSurfaceKHR(dpy, surface);
+        return system->egl.ext.eglUnlockSurfaceKHR(dpy, surface);
     }
     return setError(EGL_BAD_DISPLAY, (EGLBoolean)EGL_FALSE);
 }
@@ -770,15 +834,17 @@ EGLImageKHR eglCreateImageKHRImpl(EGLDisplay dpy, EGLContext ctx,
                                   EGLenum target, EGLClientBuffer buffer,
                                   const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return eglCreateImageTmpl(dpy, ctx, target, buffer, attrib_list,
-                              system->egl.eglCreateImageKHR);
+                              system->egl.ext.eglCreateImageKHR);
 }
 
 EGLImage eglCreateImageImpl(EGLDisplay dpy, EGLContext ctx, EGLenum target,
                             EGLClientBuffer buffer,
                             const EGLAttrib* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglCreateImage)
     {
@@ -789,12 +855,13 @@ EGLImage eglCreateImageImpl(EGLDisplay dpy, EGLContext ctx, EGLenum target,
     std::vector<EGLint> convertedAttribs;
     convertAttribs(attrib_list, convertedAttribs);
     return eglCreateImageTmpl(dpy, ctx, target, buffer, convertedAttribs.data(),
-                              system->egl.eglCreateImageKHR);
+                              system->egl.ext.eglCreateImageKHR);
 }
 
 EGLBoolean eglDestroyImageTmpl(EGLDisplay dpy, EGLImageKHR img,
                                PFNEGLDESTROYIMAGEKHRPROC destroyImageFunc)
 {
+    clearError();
     EGLBoolean result = EGL_FALSE;
     if (destroyImageFunc)
     {
@@ -805,19 +872,21 @@ EGLBoolean eglDestroyImageTmpl(EGLDisplay dpy, EGLImageKHR img,
 
 EGLBoolean eglDestroyImageKHRImpl(EGLDisplay dpy, EGLImageKHR img)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
-    return eglDestroyImageTmpl(dpy, img, system->egl.eglDestroyImageKHR);
+    return eglDestroyImageTmpl(dpy, img, system->egl.ext.eglDestroyImageKHR);
 }
 
 EGLBoolean eglDestroyImageImpl(EGLDisplay dpy, EGLImageKHR img)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglDestroyImage)
     {
         return eglDestroyImageTmpl(dpy, img, system->egl.eglDestroyImage);
     }
 
-    return eglDestroyImageTmpl(dpy, img, system->egl.eglDestroyImageKHR);
+    return eglDestroyImageTmpl(dpy, img, system->egl.ext.eglDestroyImageKHR);
 }
 
 // ----------------------------------------------------------------------------
@@ -830,6 +899,7 @@ EGLSyncKHR eglCreateSyncTmpl(EGLDisplay dpy, EGLenum type,
                              const AttrType* attrib_list,
                              FuncType eglCreateSyncFunc)
 {
+    clearError();
     EGLSyncKHR result = EGL_NO_SYNC_KHR;
     if (eglCreateSyncFunc)
     {
@@ -844,14 +914,16 @@ typedef EGLSurface(EGLAPIENTRYP PFNEGLCREATESYNC)(EGLDisplay dpy, EGLenum type,
 EGLSyncKHR eglCreateSyncKHRImpl(EGLDisplay dpy, EGLenum type,
                                 const EGLint* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return eglCreateSyncTmpl(dpy, type, attrib_list,
-                             system->egl.eglCreateSyncKHR);
+                             system->egl.ext.eglCreateSyncKHR);
 }
 
 EGLSync eglCreateSyncImpl(EGLDisplay dpy, EGLenum type,
                           const EGLAttrib* attrib_list)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglCreateSync)
     {
@@ -862,12 +934,13 @@ EGLSync eglCreateSyncImpl(EGLDisplay dpy, EGLenum type,
     std::vector<EGLint> convertedAttribs;
     convertAttribs(attrib_list, convertedAttribs);
     return eglCreateSyncTmpl(dpy, type, convertedAttribs.data(),
-                             system->egl.eglCreateSyncKHR);
+                             system->egl.ext.eglCreateSyncKHR);
 }
 
 EGLBoolean eglDestroySyncTmpl(EGLDisplay dpy, EGLSyncKHR sync,
                               PFNEGLDESTROYSYNCKHRPROC eglDestroySyncFunc)
 {
+    clearError();
     EGLBoolean result = EGL_FALSE;
     if (eglDestroySyncFunc)
     {
@@ -878,28 +951,31 @@ EGLBoolean eglDestroySyncTmpl(EGLDisplay dpy, EGLSyncKHR sync,
 
 EGLBoolean eglDestroySyncKHRImpl(EGLDisplay dpy, EGLSyncKHR sync)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
-    return eglDestroySyncTmpl(dpy, sync, system->egl.eglDestroySyncKHR);
+    return eglDestroySyncTmpl(dpy, sync, system->egl.ext.eglDestroySyncKHR);
 }
 
 EGLBoolean eglDestroySyncImpl(EGLDisplay dpy, EGLSyncKHR sync)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglDestroySync)
     {
         return eglDestroySyncTmpl(dpy, sync, system->egl.eglDestroySync);
     }
 
-    return eglDestroySyncTmpl(dpy, sync, system->egl.eglDestroySyncKHR);
+    return eglDestroySyncTmpl(dpy, sync, system->egl.ext.eglDestroySyncKHR);
 }
 
 EGLBoolean eglSignalSyncKHRImpl(EGLDisplay dpy, EGLSyncKHR sync, EGLenum mode)
 {
+    clearError();
     EGLBoolean result = EGL_FALSE;
     auto system = egl_system_t::loader::getInstance().system;
-    if (system->egl.eglSignalSyncKHR)
+    if (system->egl.ext.eglSignalSyncKHR)
     {
-        result = system->egl.eglSignalSyncKHR(dpy, sync, mode);
+        result = system->egl.ext.eglSignalSyncKHR(dpy, sync, mode);
     }
     return result;
 }
@@ -908,6 +984,7 @@ EGLint eglClientWaitSyncTmpl(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags,
                              EGLTimeKHR timeout,
                              PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncFunc)
 {
+    clearError();
     EGLint result = EGL_FALSE;
     if (eglClientWaitSyncFunc)
     {
@@ -919,14 +996,16 @@ EGLint eglClientWaitSyncTmpl(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags,
 EGLint eglClientWaitSyncKHRImpl(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags,
                                 EGLTimeKHR timeout)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return eglClientWaitSyncTmpl(dpy, sync, flags, timeout,
-                                 system->egl.eglClientWaitSyncKHR);
+                                 system->egl.ext.eglClientWaitSyncKHR);
 }
 
 EGLint eglClientWaitSyncImpl(EGLDisplay dpy, EGLSync sync, EGLint flags,
                              EGLTimeKHR timeout)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglClientWaitSync)
     {
@@ -935,7 +1014,7 @@ EGLint eglClientWaitSyncImpl(EGLDisplay dpy, EGLSync sync, EGLint flags,
     }
 
     return eglClientWaitSyncTmpl(dpy, sync, flags, timeout,
-                                 system->egl.eglClientWaitSyncKHR);
+                                 system->egl.ext.eglClientWaitSyncKHR);
 }
 
 template <typename AttrType, typename FuncType>
@@ -954,6 +1033,7 @@ EGLBoolean eglGetSyncAttribTmpl(EGLDisplay dpy, EGLSyncKHR sync,
 EGLBoolean eglGetSyncAttribImpl(EGLDisplay dpy, EGLSync sync, EGLint attribute,
                                 EGLAttrib* value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglGetSyncAttrib)
     {
@@ -964,7 +1044,7 @@ EGLBoolean eglGetSyncAttribImpl(EGLDisplay dpy, EGLSync sync, EGLint attribute,
     // Fallback to KHR, ask for EGLint attribute and cast back to EGLAttrib
     EGLint attribValue;
     EGLBoolean ret = eglGetSyncAttribTmpl(dpy, sync, attribute, &attribValue,
-                                          system->egl.eglGetSyncAttribKHR);
+                                          system->egl.ext.eglGetSyncAttribKHR);
     if (ret)
     {
         *value = static_cast<EGLAttrib>(attribValue);
@@ -975,9 +1055,10 @@ EGLBoolean eglGetSyncAttribImpl(EGLDisplay dpy, EGLSync sync, EGLint attribute,
 EGLBoolean eglGetSyncAttribKHRImpl(EGLDisplay dpy, EGLSyncKHR sync,
                                    EGLint attribute, EGLint* value)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return eglGetSyncAttribTmpl(dpy, sync, attribute, value,
-                                system->egl.eglGetSyncAttribKHR);
+                                system->egl.ext.eglGetSyncAttribKHR);
 }
 
 // ----------------------------------------------------------------------------
@@ -1003,13 +1084,15 @@ typedef EGLBoolean(EGLAPIENTRYP PFNEGLWAITSYNC)(EGLDisplay dpy, EGLSync sync,
 
 EGLint eglWaitSyncKHRImpl(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     return eglWaitSyncTmpl<EGLint>(dpy, sync, flags,
-                                   system->egl.eglWaitSyncKHR);
+                                   system->egl.ext.eglWaitSyncKHR);
 }
 
 EGLBoolean eglWaitSyncImpl(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
+    clearError();
     auto system = egl_system_t::loader::getInstance().system;
     if (system->egl.eglWaitSync)
     {
@@ -1017,8 +1100,8 @@ EGLBoolean eglWaitSyncImpl(EGLDisplay dpy, EGLSync sync, EGLint flags)
                                            system->egl.eglWaitSync);
     }
 
-    return static_cast<EGLBoolean>(
-        eglWaitSyncTmpl<EGLint>(dpy, sync, flags, system->egl.eglWaitSyncKHR));
+    return static_cast<EGLBoolean>(eglWaitSyncTmpl<EGLint>(
+        dpy, sync, flags, system->egl.ext.eglWaitSyncKHR));
 }
 
 const GLubyte* glGetStringImpl(GLenum name)
@@ -1174,14 +1257,8 @@ void fullPlatformImpl(platform_impl_t& pImpl)
  *
  */
 
-struct egl_entry_t
-{
-    const char* name;
-    __eglMustCastToProperFunctionPointerType address;
-};
-
 // clang-format off
-static const egl_entry_t sEntryMap[] = {
+static const std::unordered_map<std::string_view, __eglMustCastToProperFunctionPointerType> sEntryMap = {
 #undef EGL_ENTRY
 #undef GL_ENTRY
 #define EGL_ENTRY(_r, _api, ...) {#_api, (__eglMustCastToProperFunctionPointerType)_api ## Impl},
@@ -1191,10 +1268,6 @@ static const egl_entry_t sEntryMap[] = {
 
 #undef GL_ENTRY
 #undef EGL_ENTRY
-
-    // EGL_KHR_image, EGL_KHR_image_base
-    { "eglCreateImageKHR", (__eglMustCastToProperFunctionPointerType)eglCreateImageKHR },
-    { "eglDestroyImageKHR", (__eglMustCastToProperFunctionPointerType)eglDestroyImageKHR },
 
     // EGL_EXT_platform_base
     { "eglGetPlatformDisplayEXT", (__eglMustCastToProperFunctionPointerType)eglGetPlatformDisplayEXTImpl },
@@ -1209,13 +1282,8 @@ static const egl_entry_t sEntryMap[] = {
 
 __eglMustCastToProperFunctionPointerType findProcAddress(const char* name)
 {
-    for (auto& map : sEntryMap)
-    {
-        if (!strcmp(name, map.name))
-        {
-            return map.address;
-        }
-    }
+    if (auto iter = sEntryMap.find(name); iter != sEntryMap.end())
+        return iter->second;
     return nullptr;
 }
 

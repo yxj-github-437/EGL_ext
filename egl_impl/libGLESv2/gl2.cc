@@ -27,11 +27,11 @@
 
 #include "logger.h"
 #include "loader/loader.h"
-#include "platform/egl_tls.h"
 
 using namespace egl_wrapper;
 
 class check_gl_rval {
+    GLenum (*getError)();
     std::string func;
     std::stringstream ss{};
 
@@ -74,17 +74,18 @@ class check_gl_rval {
 
   public:
     template <typename... Args>
-    check_gl_rval(std::string func, Args&&... args) : func{func}
+    check_gl_rval(GLenum (*getError)(), std::string func, Args&&... args) :
+        getError(getError),
+        func{func}
     {
         ss << std::showbase << std::hex;
         format_arguments(ss, std::forward<Args>(args)...);
     }
     ~check_gl_rval()
     {
-        gl_hooks_t::gl_t const* const gl = &getGlThreadSpecific()->gl;
         logger::log_info() << "call " << func << "(" << ss.str() << ")"
                            << " with glError: " << std::showbase << std::hex
-                           << (uint32_t)gl->glGetError();
+                           << (uint32_t)getError();
     }
 };
 
@@ -102,8 +103,9 @@ class check_gl_rval {
 #define API_ENTRY(_api) _api
 
 #define CALL_GL_API_INTERNAL_CALL(_api, ...)                                   \
-    gl_hooks_t::gl_t const* const _c = &getGlThreadSpecific()->gl;             \
-    /* check_gl_rval ignore{__func__, __VA_ARGS__}; */                         \
+    gl_hooks_t::gl_t const* const _c =                                         \
+        &egl_get_system()->hooks[egl_system_t::GLESv2_INDEX].gl;               \
+    check_gl_rval ignore{_c->glGetError, __func__, __VA_ARGS__};               \
     if (_c) [[likely]]                                                         \
         return _c->_api(__VA_ARGS__);                                          \
     else                                                                       \

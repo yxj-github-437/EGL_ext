@@ -402,9 +402,13 @@ gralloc_libhareware::allocate_buffer(int width, int height, int format,
                                       usage, &handle, (int*)&stride);
     }
 
+    logger::log_info() << "create handle width: " << width
+                       << ", height: " << height << std::showbase << std::hex
+                       << ", format: " << format << ", usage:" << usage;
+
     if (rval != 0)
     {
-        logger::log_error() << "allocate buffer failed, errno: " << rval;
+        logger::log_fatal() << "allocate buffer failed, errno: " << rval;
         return nullptr;
     }
 
@@ -415,10 +419,7 @@ gralloc_libhareware::allocate_buffer(int width, int height, int format,
     buf->stride = stride;
     buf->usage = usage;
 
-    logger::log_info() << "get buffer, handle: " << buf->handle
-                       << ", width: " << width << ", height: " << height
-                       << ", stride: " << stride << std::showbase << std::hex
-                       << ", format: " << format << ", usage:" << usage;
+    logger::log_info() << "get buffer, handle: " << buf->handle;
 
     return buf;
 }

@@ -141,20 +141,19 @@ gralloc_nativewindow::allocate_buffer(int width, int height, int format,
         .usage = usage,
     };
     rval = vptr.AHardwareBuffer_allocate(&desc, &buf->ahb);
-    dumpAllocationLog();
 
+    logger::log_info() << "create handle width: " << width
+                       << ", height: " << height << std::showbase << std::hex
+                       << ", format: " << format << ", usage:" << usage;
     if (rval != 0)
     {
-        logger::log_error() << "allocate buffer failed, errno: " << rval;
+        logger::log_fatal() << "allocate buffer failed, errno: " << rval;
         return nullptr;
     }
 
     auto new_handle = vptr.AHardwareBuffer_getNativeHandle(buf->ahb);
     logger::log_info() << "get buffer: " << (void*)buf->ahb
-                       << ", handle: " << (void*)new_handle
-                       << ", width: " << width << ", height: " << height
-                       << std::showbase << std::hex << ", format: " << format
-                       << ", usage:" << usage;
+                       << ", handle: " << (void*)new_handle;
 
     vptr.AHardwareBuffer_describe(buf->ahb, &desc);
     buf->handle = new_handle;

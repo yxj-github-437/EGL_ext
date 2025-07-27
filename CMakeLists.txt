@@ -3,6 +3,7 @@ project(EGL_ext)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
 
 option(SUPPORT_WAYLAND "" ON)
 

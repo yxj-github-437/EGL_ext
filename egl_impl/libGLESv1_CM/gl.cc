@@ -27,6 +27,65 @@
 
 using namespace egl_wrapper;
 
+class check_gl_rval {
+    std::string func;
+    std::stringstream ss{};
+
+    template <typename T, typename... Args>
+    inline std::ostream& format_arguments(std::ostream& os, T&& t,
+                                          Args&&... args)
+    {
+        if constexpr (sizeof(T) == 1)
+        {
+            os << (uint32_t)std::forward<T>(t);
+        }
+        else if constexpr (std::is_same_v<T, const char*> ||
+                           std::is_same_v<T, char*>)
+        {
+            os << "\"" << std::forward<T>(t) << "\"";
+        }
+        else
+        {
+            os << std::forward<T>(t);
+        }
+        os << ", ";
+        return format_arguments(os, std::forward<Args>(args)...);
+    }
+
+    inline std::ostream& format_arguments(std::ostream& os) { return os; }
+
+    template <typename T>
+    inline std::ostream& format_arguments(std::ostream& os, T&& t)
+    {
+        if constexpr (sizeof(T) == 1)
+        {
+            os << (uint32_t)std::forward<T>(t);
+        }
+        else
+        {
+            os << std::forward<T>(t);
+        }
+        return os;
+    }
+
+  public:
+    template <typename... Args>
+    check_gl_rval(std::string func, Args&&... args) : func{func}
+    {
+        ss << std::showbase << std::hex;
+        format_arguments(ss, std::forward<Args>(args)...);
+    }
+    ~check_gl_rval()
+    {
+        const auto& gl = egl_get_system()->hooks[egl_system_t::GLESv1_INDEX].gl;
+        logger::log_info() << "call " << func << "(" << ss.str() << ")"
+                           << " with glError: " << std::showbase << std::hex
+                           << static_cast<uint32_t>(gl.glGetError
+                                                        ? gl.glGetError()
+                                                        : GL_NO_ERROR);
+    }
+};
+
 // ----------------------------------------------------------------------------
 // Actual GL entry-points
 // ----------------------------------------------------------------------------
@@ -38,13 +97,18 @@ using namespace egl_wrapper;
 #undef CALL_GL_API_INTERNAL_DO_RETURN
 #undef CALL_GL_API_RETURN
 
+#ifdef NDEBUG
+#define GL_CALL_TRACE(_api, ...)
+#else
+#define GL_CALL_TRACE(_api, ...) check_gl_rval ignore{__func__, __VA_ARGS__};
+#endif
+
 #define API_ENTRY(_api) _api
 
 #define CALL_GL_API_INTERNAL_CALL(_api, ...)                                   \
-    gl_hooks_t::gl_t const* const _c =                                         \
-        &egl_get_system()->hooks[egl_system_t::GLESv1_INDEX].gl;               \
-    if (_c) [[likely]]                                                         \
-        return _c->_api(__VA_ARGS__);                                          \
+    const auto& gl = egl_get_system()->hooks[egl_system_t::GLESv1_INDEX].gl;   \
+    if (gl._api) [[likely]]                                                    \
+        return gl._api(__VA_ARGS__);                                           \
     else                                                                       \
         logger::log_warn() << __FUNCTION__ << " is not be implemented";
 
@@ -55,10 +119,12 @@ using namespace egl_wrapper;
 #define CALL_GL_API_INTERNAL_DO_RETURN
 
 #define CALL_GL_API(_api, ...)                                                 \
+    GL_CALL_TRACE(_api, __VA_ARGS__)                                           \
     CALL_GL_API_INTERNAL_CALL(_api, __VA_ARGS__)                               \
     CALL_GL_API_INTERNAL_DO_RETURN
 
 #define CALL_GL_API_RETURN(_api, ...)                                          \
+    GL_CALL_TRACE(_api, __VA_ARGS__)                                           \
     CALL_GL_API_INTERNAL_CALL(_api, __VA_ARGS__)                               \
     CALL_GL_API_INTERNAL_SET_RETURN_VALUE                                      \
     CALL_GL_API_INTERNAL_DO_RETURN
@@ -69,6 +135,8 @@ extern "C" {
 // #include "glext_api.in"
 #pragma GCC diagnostic warning "-Wunused-parameter"
 }
+
+#undef GL_CALL_TRACE
 
 #undef API_ENTRY
 #undef CALL_GL_API

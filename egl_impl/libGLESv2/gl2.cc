@@ -31,7 +31,6 @@
 using namespace egl_wrapper;
 
 class check_gl_rval {
-    GLenum (*getError)();
     std::string func;
     std::stringstream ss{};
 
@@ -74,18 +73,19 @@ class check_gl_rval {
 
   public:
     template <typename... Args>
-    check_gl_rval(GLenum (*getError)(), std::string func, Args&&... args) :
-        getError(getError),
-        func{func}
+    check_gl_rval(std::string func, Args&&... args) : func{func}
     {
         ss << std::showbase << std::hex;
         format_arguments(ss, std::forward<Args>(args)...);
     }
     ~check_gl_rval()
     {
+        const auto& gl = egl_get_system()->hooks[egl_system_t::GLESv2_INDEX].gl;
         logger::log_info() << "call " << func << "(" << ss.str() << ")"
                            << " with glError: " << std::showbase << std::hex
-                           << (uint32_t)getError();
+                           << static_cast<uint32_t>(gl.glGetError
+                                                        ? gl.glGetError()
+                                                        : GL_NO_ERROR);
     }
 };
 
@@ -100,14 +100,18 @@ class check_gl_rval {
 #undef CALL_GL_API_INTERNAL_DO_RETURN
 #undef CALL_GL_API_RETURN
 
+#ifdef NDEBUG
+#define GL_CALL_TRACE(_api, ...)
+#else
+#define GL_CALL_TRACE(_api, ...) check_gl_rval ignore{__func__, __VA_ARGS__};
+#endif
+
 #define API_ENTRY(_api) _api
 
 #define CALL_GL_API_INTERNAL_CALL(_api, ...)                                   \
-    gl_hooks_t::gl_t const* const _c =                                         \
-        &egl_get_system()->hooks[egl_system_t::GLESv2_INDEX].gl;               \
-    check_gl_rval ignore{_c->glGetError, __func__, __VA_ARGS__};               \
-    if (_c) [[likely]]                                                         \
-        return _c->_api(__VA_ARGS__);                                          \
+    const auto& gl = egl_get_system()->hooks[egl_system_t::GLESv2_INDEX].gl;   \
+    if (gl._api) [[likely]]                                                    \
+        return gl._api(__VA_ARGS__);                                           \
     else                                                                       \
         logger::log_warn() << __FUNCTION__ << " is not be implemented";
 
@@ -118,10 +122,12 @@ class check_gl_rval {
 #define CALL_GL_API_INTERNAL_DO_RETURN
 
 #define CALL_GL_API(_api, ...)                                                 \
+    GL_CALL_TRACE(_api, __VA_ARGS__)                                           \
     CALL_GL_API_INTERNAL_CALL(_api, __VA_ARGS__)                               \
     CALL_GL_API_INTERNAL_DO_RETURN
 
 #define CALL_GL_API_RETURN(_api, ...)                                          \
+    GL_CALL_TRACE(_api, __VA_ARGS__)                                           \
     CALL_GL_API_INTERNAL_CALL(_api, __VA_ARGS__)                               \
     CALL_GL_API_INTERNAL_SET_RETURN_VALUE                                      \
     CALL_GL_API_INTERNAL_DO_RETURN
@@ -132,6 +138,8 @@ extern "C" {
 // #include "gl2ext_api.in"
 #pragma GCC diagnostic warning "-Wunused-parameter"
 }
+
+#undef GL_CALL_TRACE
 
 #undef API_ENTRY
 #undef CALL_GL_API

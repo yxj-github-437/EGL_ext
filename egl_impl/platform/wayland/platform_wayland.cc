@@ -5,6 +5,7 @@
 #include "wayland-server-protocol-core.h"
 
 #include <assert.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <android/hardware_buffer.h>
 #include <sync/sync.h>

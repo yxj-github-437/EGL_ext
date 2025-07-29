@@ -1,7 +1,6 @@
 #ifndef GRALLOC_ADAPTER_LIBHARDWARE_H_
 #define GRALLOC_ADAPTER_LIBHARDWARE_H_
 
-#include "cutils/native_handle.h"
 #include "gralloc_adapter.h"
 #include "GrallocUsageConversion.h"
 #include "logger.h"
@@ -12,6 +11,7 @@
 #include <unistd.h>
 #include <vector>
 
+#include <cutils/native_handle.h>
 #include <hardware/gralloc.h>
 #include <hardware/gralloc1.h>
 
@@ -78,39 +78,43 @@ class gralloc_libhareware
     const hw_module_t* gralloc_module;
     friend class gralloc_buffer_libhardware;
 
-    bool is_gralloc1;
+    bool is_gralloc1{};
 
     // gralloc1
-    gralloc1_device_t* gralloc1_device;
-    struct gralloc1_vptr gralloc1_vptr;
-    bool gralloc1_release_implies_delete;
+    gralloc1_device_t* gralloc1_device{};
+    struct gralloc1_vptr gralloc1_vptr = {};
+    bool gralloc1_support_layered_buffers{};
+    bool gralloc1_release_implies_delete{};
 
     // gralloc0
-    gralloc_module_t* gralloc0_module;
-    alloc_device_t* gralloc0_device;
+    gralloc_module_t* gralloc0_module{};
+    alloc_device_t* gralloc0_device{};
 
     void gralloc1_init_vptr()
     {
         uint32_t count = 0;
-        gralloc1_device->getCapabilities(gralloc1_device, &count, NULL);
+        gralloc1_device->getCapabilities(gralloc1_device, &count, nullptr);
         logger::log_info() << "gralloc1 count " << count;
 
         if (count >= 1)
         {
-            std::vector<int32_t> gralloc1_capabilities{};
-            gralloc1_capabilities.resize(count);
-
+            std::vector<int32_t> gralloc1_capabilities(count);
             gralloc1_device->getCapabilities(gralloc1_device, &count,
                                              gralloc1_capabilities.data());
+            gralloc1_capabilities.resize(count);
 
             // currently the only one that affects us/interests us is release
             // imply delete.
-            for (int32_t i = 0; i < count; i++)
+            for (auto capability : gralloc1_capabilities)
             {
-                if (gralloc1_capabilities[i] ==
-                    GRALLOC1_CAPABILITY_RELEASE_IMPLY_DELETE)
+                switch (capability)
                 {
+                case GRALLOC1_CAPABILITY_RELEASE_IMPLY_DELETE:
                     gralloc1_release_implies_delete = true;
+                    break;
+                case GRALLOC1_CAPABILITY_LAYERED_BUFFERS:
+                    gralloc1_support_layered_buffers = true;
+                    break;
                 }
             }
         }
@@ -200,7 +204,10 @@ class gralloc_libhareware
             gralloc1_open(gralloc_module, &gralloc1_device);
 
             if (!gralloc1_device)
+            {
+                logger::log_fatal() << "cannot open gralloc1_device";
                 return;
+            }
 
             logger::log_info() << "gralloc1_device: " << gralloc1_device;
             gralloc1_init_vptr();
@@ -212,7 +219,10 @@ class gralloc_libhareware
             gralloc_open(gralloc_module, &gralloc0_device);
 
             if (!gralloc0_device)
+            {
+                logger::log_fatal() << "cannot open gralloc0_device";
                 return;
+            }
 
             logger::log_info() << "gralloc0_device: " << gralloc0_device;
         }
@@ -223,7 +233,7 @@ class gralloc_libhareware
         {
             if (gralloc1_device)
                 gralloc1_close(gralloc1_device);
-            gralloc1_device = NULL;
+            gralloc1_device = nullptr;
 
             memset(&gralloc1_vptr, 0, sizeof(gralloc1_vptr));
         }
@@ -251,8 +261,8 @@ class gralloc_buffer_libhardware : public gralloc_buffer {
     std::shared_ptr<gralloc_libhareware> adapter;
     friend class gralloc_libhareware;
 
-    bool locked;
-    bool was_allocated;
+    bool locked{};
+    bool was_allocated{};
 
   public:
     int lock(uint64_t usage, const ARect& rect, void** vaddr) override
@@ -366,53 +376,90 @@ gralloc_libhareware::allocate_buffer(int width, int height, int format,
     buf->was_allocated = true;
     buf->layerCount = 1;
 
-    buffer_handle_t handle = nullptr;
-    uint32_t stride;
+    buffer_handle_t handle{};
+    uint32_t stride{};
 
     int rval = -ENOSYS;
     if (is_gralloc1)
     {
         gralloc1_buffer_descriptor_t desc;
-        uint64_t producer_usage;
-        uint64_t consumer_usage;
+        uint64_t producer_usage{};
+        uint64_t consumer_usage{};
 
         android_convertGralloc0To1Usage(usage, &producer_usage,
                                         &consumer_usage);
 
         // create temporary description (descriptor) of buffer to allocate
         rval = gralloc1_vptr.create_descriptor(gralloc1_device, &desc);
-        rval |=
-            gralloc1_vptr.set_dimensions(gralloc1_device, desc, width, height);
-        rval |= gralloc1_vptr.set_consumer_usage(gralloc1_device, desc,
-                                                 consumer_usage);
-        rval |= gralloc1_vptr.set_producer_usage(gralloc1_device, desc,
-                                                 producer_usage);
-        rval |= gralloc1_vptr.set_format(gralloc1_device, desc, format);
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            rval = gralloc1_vptr.set_dimensions(gralloc1_device, desc, width,
+                                                height);
+        }
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            rval = gralloc1_vptr.set_consumer_usage(gralloc1_device, desc,
+                                                    consumer_usage);
+        }
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            rval = gralloc1_vptr.set_producer_usage(gralloc1_device, desc,
+                                                    producer_usage);
+        }
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            rval = gralloc1_vptr.set_format(gralloc1_device, desc, format);
+        }
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            if (gralloc1_support_layered_buffers)
+            {
+                rval = gralloc1_vptr.set_layer_count(gralloc1_device, desc,
+                                                     buf->layerCount);
+            }
+            else if (buf->layerCount > 1)
+            {
+                rval = GRALLOC1_ERROR_UNSUPPORTED;
+            }
+        }
 
-        // actual allocation
-        rval |= gralloc1_vptr.allocate(gralloc1_device, 1, &desc, &handle);
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            // actual allocation
+            rval = gralloc1_vptr.allocate(gralloc1_device, 1, &desc, &handle);
+            if (rval == GRALLOC1_ERROR_NONE)
+            {
+                buf->handle = handle;
+            }
+        }
 
-        // get stride and release temporary descriptor
-        rval |= gralloc1_vptr.get_stride(gralloc1_device, handle, &stride);
-        rval |= gralloc1_vptr.destroy_descriptor(gralloc1_device, desc);
+        if (rval == GRALLOC1_ERROR_NONE)
+        {
+            // get stride and release temporary descriptor
+            rval = gralloc1_vptr.get_stride(gralloc1_device, handle, &stride);
+        }
+        gralloc1_vptr.destroy_descriptor(gralloc1_device, desc);
     }
     else
     {
         rval = gralloc0_device->alloc(gralloc0_device, width, height, format,
                                       usage, &handle, (int*)&stride);
+        if (rval == 0)
+        {
+            buf->handle = handle;
+        }
     }
 
     logger::log_info() << "create handle width: " << width
                        << ", height: " << height << std::showbase << std::hex
                        << ", format: " << format << ", usage:" << usage;
 
-    if (rval != 0)
+    if (rval != 0 || stride == 0)
     {
         logger::log_fatal() << "allocate buffer failed, errno: " << rval;
         return nullptr;
     }
 
-    buf->handle = handle;
     buf->width = width;
     buf->height = height;
     buf->format = format;

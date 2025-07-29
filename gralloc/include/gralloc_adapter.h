@@ -1,7 +1,7 @@
 #ifndef GRALLOC_APAPTER_H_
 #define GRALLOC_APAPTER_H_
 
-#include "cutils/native_handle.h"
+#include <cutils/native_handle.h>
 #include <hardware/hardware.h>
 
 #include <android/hardware_buffer.h>
@@ -38,13 +38,13 @@ class gralloc_adapter_t {
 
     class buffer {
       public:
-        int width;
-        int height;
-        int stride;
-        int format;
-        uintptr_t layerCount;
-        buffer_handle_t handle;
-        uint64_t usage;
+        int width{};
+        int height{};
+        int stride{};
+        int format{};
+        uintptr_t layerCount{};
+        buffer_handle_t handle{};
+        uint64_t usage{};
 
         buffer() = default;
         virtual ~buffer() = 0;

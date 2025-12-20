@@ -25,7 +25,10 @@ class egl_system_t {
             __eglMustCastToProperFunctionPointerType (*)(const char*);
 
         getProcAddressType getProcAddress;
+
+#ifndef __HYBRIS__
         utils::systemlib_loader systemloader;
+#endif
 
         loader();
 

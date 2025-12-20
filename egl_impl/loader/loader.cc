@@ -75,9 +75,11 @@ egl_system_t::loader& egl_system_t::loader::getInstance()
 
 egl_system_t::loader::loader() : getProcAddress(nullptr)
 {
+#ifndef __HYBRIS__
     // we need system libEGL, but LD_LIBRARY_PATH could make libEGL load failed,
     // so save it and reset when dlopen completed.
     auto restored = systemloader.create_ldenv_restore();
+#endif
 
     libEgl = dlopen(SYSTEM_LIB_PATH "/libEGL.so", RTLD_NOW);
     if (!libEgl)

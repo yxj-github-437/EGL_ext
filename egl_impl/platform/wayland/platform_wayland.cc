@@ -22,27 +22,6 @@ struct wl_buffer_listener wlbuffer_listener = {
     },
     // clang-format on
 };
-
-// copy from https://github.com/NVIDIA/egl-wayland.git
-bool check_memory_is_readable(const void* p, size_t len)
-{
-    int fds[2], result = -1;
-    if (pipe(fds) == -1)
-        return false;
-
-    if (fcntl(fds[1], F_SETFL, O_NONBLOCK) == -1)
-    {
-        goto done;
-    }
-
-    result = write(fds[1], p, len);
-    assert(result != -1 || errno != EFAULT);
-
-done:
-    close(fds[0]);
-    close(fds[1]);
-    return result != -1;
-}
 } // namespace
 
 WaylandNativeWindow::WaylandNativeWindow(struct wl_display* display,
@@ -612,16 +591,14 @@ EGLBoolean wayland_wrapper_t::terminate()
 ANativeWindow* wayland_wrapper_t::create_window(void* native_window)
 {
     auto window = static_cast<EGLNativeWindowType>(native_window);
-    WaylandNativeWindow* wayland_window =
+    android_wrap::sp wayland_window =
         new WaylandNativeWindow{display, window, wlegl};
-    if (!wayland_window->valid)
+    if (wayland_window->valid)
     {
-        delete wayland_window;
-        return nullptr;
+        return wayland_window.release();
     }
 
-    wayland_window->common.incRef(&wayland_window->common);
-    return wayland_window;
+    return nullptr;
 }
 
 void wayland_wrapper_t::destroy_window(ANativeWindow* win)
@@ -640,18 +617,6 @@ void wayland_wrapper_t::finish_swap(ANativeWindow* win)
 {
     auto wayland_window = static_cast<WaylandNativeWindow*>(win);
     wayland_window->finish_swap();
-}
-
-bool check_wayland_display(struct wl_display* display)
-{
-    if (!check_memory_is_readable(display, sizeof(void*)))
-        return false;
-
-    const char name[] = "wl_display";
-    auto interface = static_cast<struct wl_interface*>(*(void**)display);
-    return interface == &wl_display_interface ||
-           (check_memory_is_readable(interface->name, sizeof(name)) &&
-            memcmp(interface->name, name, sizeof(name)) == 0);
 }
 
 // server wl_egl impl
@@ -724,7 +689,7 @@ struct wlegl_buffer
 {
     struct wl_resource* resource;
     server_wlegl* wlegl;
-    egl_wrap::sp<RemoteWindowBuffer> buf;
+    android_wrap::sp<RemoteWindowBuffer> buf;
 
     ~wlegl_buffer() = default;
     static wlegl_buffer* from(struct wl_resource* buffer);

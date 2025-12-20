@@ -195,6 +195,8 @@ const char* native_window_operation(int what)
     case NATIVE_WINDOW_GET_CONSUMER_USAGE64:
         return "NATIVE_WINDOW_GET_CONSUMER_USAGE64";
     default:
+        logger::log_debug()
+            << "unknown operation(" << std::hex << std::showbase << what << ")";
         return "NATIVE_UNKNOWN_OPERATION";
     }
 }

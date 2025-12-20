@@ -1,28 +1,5 @@
-add_library(egl_loader)
-target_sources(egl_loader PRIVATE loader/loader.cc)
-target_include_directories(egl_loader PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(egl_loader PUBLIC utils_common egl_platform)
-
-add_library(egl_platform)
-target_sources(egl_platform PRIVATE
-    platform/egl_object.cc
-    platform/egl_platform_entries.cc
-    platform/egl_tls.cc)
-target_include_directories(egl_platform PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(egl_platform PUBLIC utils_common)
-target_compile_definitions(egl_platform PRIVATE
-    EGL_EGLEXT_PROTOTYPES
-    GL_GLEXT_PROTOTYPES)
-
-add_subdirectory(platform/base)
-if (SUPPORT_WAYLAND)
-    add_subdirectory(platform/wayland)
-    target_link_libraries(egl_platform PUBLIC egl_platform_wayland)
-endif()
+add_subdirectory(loader)
+add_subdirectory(platform)
 
 add_library(EGL SHARED
     libEGL/eglApi.cc)

@@ -13,6 +13,8 @@
 #include "gralloc_adapter.h"
 #include "platform_base.h"
 
+#include "platform_common/wayland/platform_wayland.h"
+
 #include <mutex>
 
 class WaylandNativeWindowBuffer;
@@ -66,7 +68,7 @@ class WaylandNativeWindow : public EGLBaseNativeWindow {
     struct android_wlegl* m_wlegl_wrapper;
     struct wl_surface* m_surface_wrapper;
 
-    std::list<egl_wrap::sp<WaylandNativeWindowBuffer>> m_bufList;
+    std::list<android_wrap::sp<WaylandNativeWindowBuffer>> m_bufList;
     std::list<WaylandNativeWindowBuffer*> posted;
     std::deque<WaylandNativeWindowBuffer*> queue;
     WaylandNativeWindowBuffer* m_lastBuffer;
@@ -161,7 +163,6 @@ class RemoteWindowBuffer : public BaseNativeWindowBuffer {
     }
 };
 
-bool check_wayland_display(struct wl_display* display);
 struct server_wlegl
 {
     struct wl_display* display;

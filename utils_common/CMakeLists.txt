@@ -9,3 +9,8 @@ target_include_directories(utils_common PUBLIC
 if(ANDROID)
     target_link_libraries(utils_common PUBLIC log)
 endif()
+
+if (WITH_HYBRIS)
+    target_compile_definitions(utils_common PUBLIC __HYBRIS__)
+    target_link_libraries(utils_common PUBLIC hybris-common)
+endif()

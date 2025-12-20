@@ -5,6 +5,13 @@
 #include <dlfcn.h>
 #include <memory>
 
+#ifdef __HYBRIS__
+#include <hybris/dlfcn/dlfcn.h>
+#define dlopen hybris_dlopen
+#define dlsym hybris_dlsym
+#define dlclose hybris_dlclose
+#endif
+
 #include "gralloc_libharware.h"
 #include "gralloc_nativewindow.h"
 
@@ -70,3 +77,25 @@ gralloc_buffer::~buffer()
 {
     handle = nullptr;
 }
+
+#define GETVPTRFUNC(vptr, func)                                                \
+    vptr.func = reinterpret_cast<decltype(vptr.func)>(dlsym(handle, #func))
+
+gralloc_adapter_t::cutils_loader::cutils_loader() noexcept :
+    handle(dlopen("libcutils.so", RTLD_NOW))
+{
+    GETVPTRFUNC(vptr, native_handle_close);
+    GETVPTRFUNC(vptr, native_handle_init);
+    GETVPTRFUNC(vptr, native_handle_create);
+    GETVPTRFUNC(vptr, native_handle_clone);
+    GETVPTRFUNC(vptr, native_handle_delete);
+}
+gralloc_adapter_t::cutils_loader::~cutils_loader() noexcept
+{
+    memset(&vptr, 0, sizeof(vptr));
+    if (!handle)
+        return;
+    dlclose(handle);
+}
+
+#undef GETVPTRFUNC

@@ -10,10 +10,14 @@ add_library(gralloc
 target_include_directories(gralloc PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
 
+if (WITH_HYBRIS)
+    target_compile_definitions(gralloc PUBLIC __HYBRIS__)
+    target_link_libraries(gralloc PUBLIC hybris-common)
+endif()
+
 target_link_libraries(gralloc PUBLIC
     utils_common
     hardware    # stub
-    cutils      # stub
 
     dl)
 set_target_properties(gralloc PROPERTIES

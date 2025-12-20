@@ -6,6 +6,13 @@
 #include <map>
 #include <dlfcn.h>
 
+#ifdef __HYBRIS__
+#include <hybris/dlfcn/dlfcn.h>
+#define dlopen hybris_dlopen
+#define dlsym hybris_dlsym
+#define dlclose hybris_dlclose
+#endif
+
 namespace utils {
 template <class T>
 T gen_env_option(const char* env_key, std::map<std::string, T> options,
@@ -79,5 +86,11 @@ class systemlib_loader {
     }
 };
 } // namespace utils
+
+#ifdef __HYBRIS__
+#undef dlopen
+#undef dlsym
+#undef dlclose
+#endif
 
 #endif // UTILS_H_

@@ -629,6 +629,8 @@ struct wlegl_handle
     int num_ints;
     int num_fds;
     native_handle_t* native_handle = nullptr;
+    std::shared_ptr<gralloc_adapter_t> adapter =
+        gralloc_loader::getInstance().get_adapter();
 
     ~wlegl_handle()
     {
@@ -639,8 +641,8 @@ struct wlegl_handle
 
         if (native_handle)
         {
-            native_handle_close(native_handle);
-            native_handle_delete(native_handle);
+            adapter->cutils.vptr.native_handle_close(native_handle);
+            adapter->cutils.vptr.native_handle_delete(native_handle);
         }
     }
     native_handle_t* get_native_buffer()
@@ -648,7 +650,8 @@ struct wlegl_handle
         if (native_handle)
             return native_handle;
 
-        native_handle = native_handle_create(num_fds, num_ints);
+        native_handle =
+            adapter->cutils.vptr.native_handle_create(num_fds, num_ints);
         memcpy(&native_handle->data[0], fds.data(), fds.size() * sizeof(int));
         memcpy(&native_handle->data[num_fds], ints.data(),
                ints.size() * sizeof(int));

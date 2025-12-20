@@ -246,7 +246,7 @@ std::shared_ptr<gralloc_buffer> recv_buffer(int socket_fd)
     auto desc = (AHardwareBuffer_Desc*)data;
     int numInts = (dataLen - sizeof(AHardwareBuffer_Desc)) / sizeof(int);
     int* ints_array = (int*)((uint8_t*)data + sizeof(AHardwareBuffer_Desc));
-    auto handle = native_handle_create(fdCount, numInts);
+    auto handle = adapter->cutils.vptr.native_handle_create(fdCount, numInts);
 
     logger::log_info() << "numFds: " << handle->numFds
                        << ", numInts: " << handle->numInts;
@@ -259,7 +259,7 @@ std::shared_ptr<gralloc_buffer> recv_buffer(int socket_fd)
         adapter->import_buffer(handle, desc->width, desc->height, desc->stride,
                                desc->format, desc->usage);
 
-    native_handle_close(handle);
-    native_handle_delete((native_handle_t*)handle);
+    adapter->cutils.vptr.native_handle_close(handle);
+    adapter->cutils.vptr.native_handle_delete((native_handle_t*)handle);
     return buffer;
 }

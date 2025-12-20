@@ -36,6 +36,24 @@ class gralloc_adapter_t {
         std::shared_ptr<gralloc_adapter_t> adapter;
     };
 
+    class cutils_loader {
+        void* handle = nullptr;
+
+      public:
+        struct cutils_vptr
+        {
+            int (*native_handle_close)(const native_handle_t* h);
+            native_handle_t* (*native_handle_init)(char* storage, int numFds,
+                                                   int numInts);
+            native_handle_t* (*native_handle_create)(int numFds, int numInts);
+            native_handle_t* (*native_handle_clone)(const native_handle_t* handle);
+            int (*native_handle_delete)(native_handle_t* h);
+        } vptr = {};
+
+        cutils_loader() noexcept;
+        ~cutils_loader() noexcept;
+    };
+
     class buffer {
       public:
         int width{};
@@ -63,6 +81,8 @@ class gralloc_adapter_t {
     virtual std::shared_ptr<gralloc_adapter_t::buffer>
     import_buffer(buffer_handle_t handle, int width, int height, int stride,
                   int format, uint64_t usage) = 0;
+
+    cutils_loader cutils{};
 };
 
 using gralloc_loader = gralloc_adapter_t::loader;

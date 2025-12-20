@@ -18,33 +18,6 @@
 class gralloc_libhareware;
 class gralloc_buffer_libhardware;
 
-namespace wrap {
-native_handle_t* native_handle_clone(const native_handle_t* handle)
-{
-    native_handle_t* clone =
-        native_handle_create(handle->numFds, handle->numInts);
-    if (clone == NULL)
-        return NULL;
-
-    for (int i = 0; i < handle->numFds; i++)
-    {
-        clone->data[i] = dup(handle->data[i]);
-        if (clone->data[i] == -1)
-        {
-            clone->numFds = i;
-            native_handle_close(clone);
-            native_handle_delete(clone);
-            return NULL;
-        }
-    }
-
-    memcpy(&clone->data[handle->numFds], &handle->data[handle->numFds],
-           sizeof(int) * handle->numInts);
-
-    return clone;
-}
-} // namespace wrap
-
 // clang-format off
 struct gralloc1_vptr
 {
@@ -342,8 +315,8 @@ class gralloc_buffer_libhardware : public gralloc_buffer {
 
             if (!adapter->gralloc1_release_implies_delete)
             {
-                native_handle_close(handle);
-                native_handle_delete((native_handle_t*)handle);
+                adapter->cutils.vptr.native_handle_close(handle);
+                adapter->cutils.vptr.native_handle_delete((native_handle_t*)handle);
             }
         }
         else
@@ -360,8 +333,8 @@ class gralloc_buffer_libhardware : public gralloc_buffer {
 
                 // this needs to happen if the last reference is gone, this
                 // function is only called in such cases.
-                native_handle_close(handle);
-                native_handle_delete((native_handle_t*)handle);
+                adapter->cutils.vptr.native_handle_close(handle);
+                adapter->cutils.vptr.native_handle_delete((native_handle_t*)handle);
             }
         }
     }
@@ -481,7 +454,33 @@ gralloc_libhareware::import_buffer(buffer_handle_t handle, int width,
     buf->was_allocated = false;
     buf->layerCount = 1;
 
-    buffer_handle_t out_handle = wrap::native_handle_clone(handle);
+    buffer_handle_t out_handle = [this, handle]() noexcept -> native_handle_t* {
+        if (cutils.vptr.native_handle_clone)
+            return cutils.vptr.native_handle_clone(handle);
+
+        native_handle_t* clone =
+            cutils.vptr.native_handle_create(handle->numFds, handle->numInts);
+        if (clone == nullptr)
+            return nullptr;
+
+        for (int i = 0; i < handle->numFds; i++)
+        {
+            clone->data[i] = dup(handle->data[i]);
+            if (clone->data[i] == -1)
+            {
+                clone->numFds = i;
+                cutils.vptr.native_handle_close(clone);
+                cutils.vptr.native_handle_delete(clone);
+                return nullptr;
+            }
+        }
+
+        memcpy(&clone->data[handle->numFds], &handle->data[handle->numFds],
+               sizeof(int) * handle->numInts);
+
+        return clone;
+    }();
+
     if (!out_handle)
         return nullptr;
 
@@ -497,8 +496,8 @@ gralloc_libhareware::import_buffer(buffer_handle_t handle, int width,
 
     if (rval != 0)
     {
-        native_handle_close(out_handle);
-        native_handle_delete((native_handle_t*)out_handle);
+        cutils.vptr.native_handle_close(out_handle);
+        cutils.vptr.native_handle_delete((native_handle_t*)out_handle);
 
         logger::log_error() << "retain buffer failed, errno: " << rval;
         return nullptr;

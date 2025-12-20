@@ -16,6 +16,13 @@ using namespace egl_wrapper;
 #endif
 #endif
 
+#ifdef __HYBRIS__
+#include <hybris/dlfcn/dlfcn.h>
+#define dlopen hybris_dlopen
+#define dlsym hybris_dlsym
+#define dlclose hybris_dlclose
+#endif
+
 namespace {
 #undef GL_ENTRY
 #undef EGL_ENTRY

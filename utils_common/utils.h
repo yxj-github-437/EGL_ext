@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <dlfcn.h>
+#include <string.h>
 
 #ifdef __HYBRIS__
 #include <hybris/dlfcn/dlfcn.h>

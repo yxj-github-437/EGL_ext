@@ -11,6 +11,8 @@
 #include <sync/sync.h>
 #include <wayland-egl-backend.h>
 #include <EGL/egl.h>
+
+#include <vector>
 #include <mutex>
 
 namespace {

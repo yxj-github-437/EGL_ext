@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 target_sources(utils_common PRIVATE logger.cc)
 target_include_directories(utils_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
+set_target_properties(utils_common PROPERTIES POSITION_INDEPENDENT_CODE ON
+    INTERFACE_POSITION_INDEPENDENT_CODE ON)
 
 if(ANDROID)
     target_link_libraries(utils_common PUBLIC log)

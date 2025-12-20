@@ -51,6 +51,10 @@
 
 #include <android/rect.h>
 
+#ifndef __ANDROID__
+#define __INTRODUCED_IN(x)
+#endif
+
 __BEGIN_DECLS
 
 /**

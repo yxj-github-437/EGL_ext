@@ -101,7 +101,7 @@
 #   define KHRONOS_APICALL __declspec(dllimport)
 #elif defined (__SYMBIAN32__)
 #   define KHRONOS_APICALL IMPORT_C
-#elif defined(ANDROID) || defined(__ANDROID__)
+#elif defined(ANDROID) || defined(__ANDROID__) || defined(__linux__)
 #   define KHRONOS_APICALL __attribute__((visibility("default")))
 #else
 #   define KHRONOS_APICALL

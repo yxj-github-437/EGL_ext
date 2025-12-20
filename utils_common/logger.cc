@@ -1,8 +1,8 @@
 #include "utils.h"
 #include "logger.h"
 
-#ifdef __ANDROID__
 #include <unistd.h>
+#ifdef __ANDROID__
 #include <android/log.h>
 #define LOG_TAG "EGL"
 #endif
@@ -66,6 +66,7 @@ const char* prio_str(logger::log_priority_t prio)
 #undef COLOR_NULL
 }
 
+#ifdef __ANDROID__
 android_LogPriority prio_cast(logger::log_priority_t prio)
 {
     switch (prio)
@@ -86,6 +87,7 @@ android_LogPriority prio_cast(logger::log_priority_t prio)
         return ANDROID_LOG_DEFAULT;
     }
 }
+#endif
 } // namespace
 
 logger::log_priority_t logger::log_t::get_default_level()

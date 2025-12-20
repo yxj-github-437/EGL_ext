@@ -6,7 +6,8 @@ endif()
 add_library(platform_common)
 target_sources(platform_common PRIVATE
     base/platform_base.cc)
-set_target_properties(platform_common PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(platform_common PROPERTIES POSITION_INDEPENDENT_CODE ON
+    INTERFACE_POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(platform_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../)

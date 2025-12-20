@@ -207,16 +207,17 @@ EGLBoolean eglGetConfigAttribImpl(EGLDisplay dpy, EGLConfig config,
 
 template <typename AttrType, typename CreateFuncType>
 EGLSurface eglCreateWindowSurfaceTmpl(egl_display_t* dp, EGLConfig config,
-                                      ANativeWindow* window,
+                                      NativeWindowType window,
                                       const AttrType* attrib_list,
                                       CreateFuncType createWindowSurfaceFunc)
 {
     EGLSurface rval = EGL_NO_SURFACE;
 
-    ANativeWindow* native_window = window;
+    ANativeWindow* native_window = reinterpret_cast<ANativeWindow*>(window);
     if (dp->platform_wrapper)
     {
-        native_window = dp->platform_wrapper->create_window(window);
+        native_window = dp->platform_wrapper->create_window(
+            reinterpret_cast<void*>(window));
     }
 
     if (createWindowSurfaceFunc)
@@ -266,20 +267,20 @@ EGLSurface eglCreatePlatformWindowSurfaceImpl(EGLDisplay dpy, EGLConfig config,
     if (system->egl.eglCreatePlatformWindowSurface)
     {
         return eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window), attrib_list,
-            system->egl.eglCreatePlatformWindowSurface);
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
+            attrib_list, system->egl.eglCreatePlatformWindowSurface);
     }
     else if (system->egl.ext.eglCreatePlatformWindowSurfaceEXT)
     {
         return eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window),
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
             convertedAttribs.data(),
             system->egl.ext.eglCreatePlatformWindowSurfaceEXT);
     }
     else
     {
         return eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window),
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
             convertedAttribs.data(), system->egl.eglCreateWindowSurface);
     }
 }
@@ -328,21 +329,21 @@ EGLSurface eglCreatePlatformWindowSurfaceEXTImpl(EGLDisplay dpy,
         std::vector<EGLAttrib> convertedAttribs{};
         convertInts(attrib_list, convertedAttribs);
         rval = eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window),
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
             convertedAttribs.data(),
             system->egl.eglCreatePlatformWindowSurface);
     }
     else if (system->egl.ext.eglCreatePlatformWindowSurfaceEXT)
     {
         rval = eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window), attrib_list,
-            system->egl.ext.eglCreatePlatformWindowSurfaceEXT);
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
+            attrib_list, system->egl.ext.eglCreatePlatformWindowSurfaceEXT);
     }
     else
     {
         rval = eglCreateWindowSurfaceTmpl(
-            dp, config, static_cast<ANativeWindow*>(native_window), attrib_list,
-            system->egl.eglCreateWindowSurface);
+            dp, config, reinterpret_cast<NativeWindowType>(native_window),
+            attrib_list, system->egl.eglCreateWindowSurface);
     }
     return rval;
 }

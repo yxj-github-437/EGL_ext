@@ -31,6 +31,8 @@
 #include <GLES3/gl31.h>
 #include <GLES3/gl32.h>
 
+struct ANativeWindow;
+
 // ----------------------------------------------------------------------------
 namespace egl_wrapper {
 // ----------------------------------------------------------------------------
@@ -46,12 +48,16 @@ struct platform_impl_t {
     #include "platform_entries.in"
 };
 
+#define EGLNativeWindowType struct ANativeWindow*
+#define NativeWindowType struct ANativeWindow*
 struct egl_t {
     #include "egl_entries.in"
     struct {
         #include "egl_ext_entries.in"
     } ext;
 };
+#undef NativeWindowType
+#undef EGLNativeWindowType
 
 struct gl_hooks_t {
     struct gl_t {

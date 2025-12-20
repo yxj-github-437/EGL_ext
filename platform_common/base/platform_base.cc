@@ -1,6 +1,7 @@
 #include "platform_base.h"
 #include "logger.h"
 
+#include <stdarg.h>
 #include <sync/sync.h>
 
 #define container_of(ptr, type, member)                                        \

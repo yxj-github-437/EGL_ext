@@ -17,6 +17,24 @@
 
 namespace {
 auto& loader_ = gralloc_adapter_t::loader::getInstance();
+
+#ifndef __ANDROID__
+int android_get_device_api_level() noexcept {
+  void* handle = dlopen("libc.so", RTLD_NOW);
+  int (*__system_property_get)(const char*__name, char* __value) = nullptr;
+  __system_property_get = (decltype(__system_property_get))dlsym(handle, "__system_property_get");
+
+  char value[92] = { 0 };
+  if (!__system_property_get || __system_property_get("ro.build.version.sdk", value) < 1) {
+    dlclose(handle);
+    return -1;
+  }
+  dlclose(handle);
+
+  int api_level = atoi(value);
+  return (api_level > 0) ? api_level : -1;
+}
+#endif
 }
 
 gralloc_loader& gralloc_loader::getInstance()

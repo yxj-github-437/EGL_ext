@@ -15,10 +15,3 @@ add_library(cutils SHARED
     src/cutils_stub.c)
 target_include_directories(cutils PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-if(WITH_HYBRIS)
-    add_library(hybris-common SHARED
-        src/hybris-dlfcn.c)
-    target_include_directories(hybris-common PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include)
-endif()

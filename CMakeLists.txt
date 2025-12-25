@@ -16,9 +16,12 @@ if(SUPPORT_WAYLAND)
     add_subdirectory(wayland)
 endif()
 
+if (WITH_HYBRIS)
+    add_subdirectory(hybris_stub)
+endif()
+
 add_subdirectory(utils_common)
 add_subdirectory(android_stub)
 add_subdirectory(gralloc)
 add_subdirectory(platform_common)
 add_subdirectory(egl_impl)
-

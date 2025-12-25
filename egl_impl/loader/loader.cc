@@ -21,6 +21,7 @@ using namespace egl_wrapper;
 #define dlopen hybris_dlopen
 #define dlsym hybris_dlsym
 #define dlclose hybris_dlclose
+#define dlerror hybris_dlerror
 #endif
 
 namespace {

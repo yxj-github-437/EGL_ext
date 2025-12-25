@@ -12,6 +12,7 @@
 #define dlopen hybris_dlopen
 #define dlsym hybris_dlsym
 #define dlclose hybris_dlclose
+#define dlerror hybris_dlerror
 #endif
 
 namespace utils {
@@ -92,6 +93,7 @@ class systemlib_loader {
 #undef dlopen
 #undef dlsym
 #undef dlclose
+#undef dlerror
 #endif
 
 #endif // UTILS_H_

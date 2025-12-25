@@ -1,0 +1,1159 @@
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance) {
+    CALL_VK_API_RETURN(vkCreateInstance, pCreateInfo, pAllocator, pInstance);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyInstance, instance, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumeratePhysicalDevices(VkInstance instance, uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) {
+    CALL_VK_API_RETURN(vkEnumeratePhysicalDevices, instance, pPhysicalDeviceCount, pPhysicalDevices);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR PFN_vkVoidFunction vkGetDeviceProcAddr(VkDevice device, const char* pName) {
+    CALL_VK_API_RETURN(vkGetDeviceProcAddr,device, pName);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR PFN_vkVoidFunction vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
+    CALL_VK_API_RETURN(vkGetInstanceProcAddr, instance, pName);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties* pProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceProperties, physicalDevice, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties* pQueueFamilyProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceQueueFamilyProperties, physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceMemoryProperties, physicalDevice, pMemoryProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceFeatures(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures) {
+    CALL_VK_API(vkGetPhysicalDeviceFeatures, physicalDevice, pFeatures);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties* pFormatProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceFormatProperties, physicalDevice, format, pFormatProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceImageFormatProperties, physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice) {
+    CALL_VK_API_RETURN(vkCreateDevice, physicalDevice, pCreateInfo, pAllocator, pDevice);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyDevice, device, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumerateInstanceVersion(uint32_t* pApiVersion) {
+    CALL_VK_API_RETURN(vkEnumerateInstanceVersion, pApiVersion);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumerateInstanceLayerProperties(uint32_t* pPropertyCount, VkLayerProperties* pProperties) {
+    CALL_VK_API_RETURN(vkEnumerateInstanceLayerProperties, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumerateInstanceExtensionProperties(const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties) {
+    CALL_VK_API_RETURN(vkEnumerateInstanceExtensionProperties, pLayerName, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties) {
+    CALL_VK_API_RETURN(vkEnumerateDeviceLayerProperties, physicalDevice, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties) {
+    CALL_VK_API_RETURN(vkEnumerateDeviceExtensionProperties, physicalDevice, pLayerName, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceQueue(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
+    CALL_VK_API(vkGetDeviceQueue, device, queueFamilyIndex, queueIndex, pQueue);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkQueueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) {
+    CALL_VK_API_RETURN(vkQueueSubmit, queue, submitCount, pSubmits, fence);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkQueueWaitIdle(VkQueue queue) {
+    CALL_VK_API_RETURN(vkQueueWaitIdle, queue);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkDeviceWaitIdle(VkDevice device) {
+    CALL_VK_API_RETURN(vkDeviceWaitIdle, device);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkAllocateMemory(VkDevice device, const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
+    CALL_VK_API_RETURN(vkAllocateMemory, device, pAllocateInfo, pAllocator, pMemory);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkFreeMemory(VkDevice device, VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkFreeMemory, device, memory, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkMapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
+    CALL_VK_API_RETURN(vkMapMemory, device, memory, offset, size, flags, ppData);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkUnmapMemory(VkDevice device, VkDeviceMemory memory) {
+    CALL_VK_API(vkUnmapMemory, device, memory);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkFlushMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+    CALL_VK_API_RETURN(vkFlushMappedMemoryRanges, device, memoryRangeCount, pMemoryRanges);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkInvalidateMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+    CALL_VK_API_RETURN(vkInvalidateMappedMemoryRanges, device, memoryRangeCount, pMemoryRanges);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceMemoryCommitment(VkDevice device, VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
+    CALL_VK_API(vkGetDeviceMemoryCommitment, device, memory, pCommittedMemoryInBytes);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetBufferMemoryRequirements(VkDevice device, VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
+    CALL_VK_API(vkGetBufferMemoryRequirements, device, buffer, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkBindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+    CALL_VK_API_RETURN(vkBindBufferMemory, device, buffer, memory, memoryOffset);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetImageMemoryRequirements(VkDevice device, VkImage image, VkMemoryRequirements* pMemoryRequirements) {
+    CALL_VK_API(vkGetImageMemoryRequirements, device, image, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkBindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+    CALL_VK_API_RETURN(vkBindImageMemory, device, image, memory, memoryOffset);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetImageSparseMemoryRequirements(VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
+    CALL_VK_API(vkGetImageSparseMemoryRequirements, device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceSparseImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint32_t* pPropertyCount, VkSparseImageFormatProperties* pProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceSparseImageFormatProperties, physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkQueueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) {
+    CALL_VK_API_RETURN(vkQueueBindSparse, queue, bindInfoCount, pBindInfo, fence);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateFence(VkDevice device, const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+    CALL_VK_API_RETURN(vkCreateFence, device, pCreateInfo, pAllocator, pFence);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyFence(VkDevice device, VkFence fence, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyFence, device, fence, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkResetFences(VkDevice device, uint32_t fenceCount, const VkFence* pFences) {
+    CALL_VK_API_RETURN(vkResetFences, device, fenceCount, pFences);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetFenceStatus(VkDevice device, VkFence fence) {
+    CALL_VK_API_RETURN(vkGetFenceStatus, device, fence);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkWaitForFences(VkDevice device, uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
+    CALL_VK_API_RETURN(vkWaitForFences, device, fenceCount, pFences, waitAll, timeout);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateSemaphore(VkDevice device, const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
+    CALL_VK_API_RETURN(vkCreateSemaphore, device, pCreateInfo, pAllocator, pSemaphore);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroySemaphore(VkDevice device, VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroySemaphore, device, semaphore, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateEvent(VkDevice device, const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
+    CALL_VK_API_RETURN(vkCreateEvent, device, pCreateInfo, pAllocator, pEvent);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyEvent(VkDevice device, VkEvent event, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyEvent, device, event, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetEventStatus(VkDevice device, VkEvent event) {
+    CALL_VK_API_RETURN(vkGetEventStatus, device, event);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkSetEvent(VkDevice device, VkEvent event) {
+    CALL_VK_API_RETURN(vkSetEvent, device, event);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkResetEvent(VkDevice device, VkEvent event) {
+    CALL_VK_API_RETURN(vkResetEvent, device, event);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateQueryPool(VkDevice device, const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
+    CALL_VK_API_RETURN(vkCreateQueryPool, device, pCreateInfo, pAllocator, pQueryPool);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyQueryPool(VkDevice device, VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyQueryPool, device, queryPool, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetQueryPoolResults(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
+    CALL_VK_API_RETURN(vkGetQueryPoolResults, device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkResetQueryPool(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+    CALL_VK_API(vkResetQueryPool, device, queryPool, firstQuery, queryCount);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateBuffer(VkDevice device, const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
+    CALL_VK_API_RETURN(vkCreateBuffer, device, pCreateInfo, pAllocator, pBuffer);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyBuffer(VkDevice device, VkBuffer buffer, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyBuffer, device, buffer, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateBufferView(VkDevice device, const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
+    CALL_VK_API_RETURN(vkCreateBufferView, device, pCreateInfo, pAllocator, pView);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyBufferView(VkDevice device, VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyBufferView, device, bufferView, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateImage(VkDevice device, const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) {
+    CALL_VK_API_RETURN(vkCreateImage, device, pCreateInfo, pAllocator, pImage);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyImage(VkDevice device, VkImage image, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyImage, device, image, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetImageSubresourceLayout(VkDevice device, VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
+    CALL_VK_API(vkGetImageSubresourceLayout, device, image, pSubresource, pLayout);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateImageView(VkDevice device, const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) {
+    CALL_VK_API_RETURN(vkCreateImageView, device, pCreateInfo, pAllocator, pView);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyImageView(VkDevice device, VkImageView imageView, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyImageView, device, imageView, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateShaderModule(VkDevice device, const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
+    CALL_VK_API_RETURN(vkCreateShaderModule, device, pCreateInfo, pAllocator, pShaderModule);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyShaderModule(VkDevice device, VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyShaderModule, device, shaderModule, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreatePipelineCache(VkDevice device, const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
+    CALL_VK_API_RETURN(vkCreatePipelineCache, device, pCreateInfo, pAllocator, pPipelineCache);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyPipelineCache(VkDevice device, VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyPipelineCache, device, pipelineCache, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPipelineCacheData(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
+    CALL_VK_API_RETURN(vkGetPipelineCacheData, device, pipelineCache, pDataSize, pData);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkMergePipelineCaches(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) {
+    CALL_VK_API_RETURN(vkMergePipelineCaches, device, dstCache, srcCacheCount, pSrcCaches);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+    CALL_VK_API_RETURN(vkCreateGraphicsPipelines, device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+    CALL_VK_API_RETURN(vkCreateComputePipelines, device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyPipeline(VkDevice device, VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyPipeline, device, pipeline, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreatePipelineLayout(VkDevice device, const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
+    CALL_VK_API_RETURN(vkCreatePipelineLayout, device, pCreateInfo, pAllocator, pPipelineLayout);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyPipelineLayout(VkDevice device, VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyPipelineLayout, device, pipelineLayout, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateSampler(VkDevice device, const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
+    CALL_VK_API_RETURN(vkCreateSampler, device, pCreateInfo, pAllocator, pSampler);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroySampler(VkDevice device, VkSampler sampler, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroySampler, device, sampler, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateDescriptorSetLayout(VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
+    CALL_VK_API_RETURN(vkCreateDescriptorSetLayout, device, pCreateInfo, pAllocator, pSetLayout);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyDescriptorSetLayout(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyDescriptorSetLayout, device, descriptorSetLayout, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateDescriptorPool(VkDevice device, const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
+    CALL_VK_API_RETURN(vkCreateDescriptorPool, device, pCreateInfo, pAllocator, pDescriptorPool);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyDescriptorPool, device, descriptorPool, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkResetDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
+    CALL_VK_API_RETURN(vkResetDescriptorPool, device, descriptorPool, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkAllocateDescriptorSets(VkDevice device, const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
+    CALL_VK_API_RETURN(vkAllocateDescriptorSets, device, pAllocateInfo, pDescriptorSets);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkFreeDescriptorSets(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) {
+    CALL_VK_API_RETURN(vkFreeDescriptorSets, device, descriptorPool, descriptorSetCount, pDescriptorSets);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkUpdateDescriptorSets(VkDevice device, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) {
+    CALL_VK_API(vkUpdateDescriptorSets, device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateFramebuffer(VkDevice device, const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
+    CALL_VK_API_RETURN(vkCreateFramebuffer, device, pCreateInfo, pAllocator, pFramebuffer);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyFramebuffer(VkDevice device, VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyFramebuffer, device, framebuffer, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateRenderPass(VkDevice device, const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+    CALL_VK_API_RETURN(vkCreateRenderPass, device, pCreateInfo, pAllocator, pRenderPass);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyRenderPass(VkDevice device, VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyRenderPass, device, renderPass, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetRenderAreaGranularity(VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity) {
+    CALL_VK_API(vkGetRenderAreaGranularity, device, renderPass, pGranularity);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateCommandPool(VkDevice device, const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
+    CALL_VK_API_RETURN(vkCreateCommandPool, device, pCreateInfo, pAllocator, pCommandPool);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyCommandPool(VkDevice device, VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyCommandPool, device, commandPool, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkResetCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
+    CALL_VK_API_RETURN(vkResetCommandPool, device, commandPool, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkAllocateCommandBuffers(VkDevice device, const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
+    CALL_VK_API_RETURN(vkAllocateCommandBuffers, device, pAllocateInfo, pCommandBuffers);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkFreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+    CALL_VK_API(vkFreeCommandBuffers, device, commandPool, commandBufferCount, pCommandBuffers);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkBeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) {
+    CALL_VK_API_RETURN(vkBeginCommandBuffer, commandBuffer, pBeginInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEndCommandBuffer(VkCommandBuffer commandBuffer) {
+    CALL_VK_API_RETURN(vkEndCommandBuffer, commandBuffer);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
+    CALL_VK_API_RETURN(vkResetCommandBuffer, commandBuffer, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
+    CALL_VK_API(vkCmdBindPipeline, commandBuffer, pipelineBindPoint, pipeline);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) {
+    CALL_VK_API(vkCmdSetViewport, commandBuffer, firstViewport, viewportCount, pViewports);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) {
+    CALL_VK_API(vkCmdSetScissor, commandBuffer, firstScissor, scissorCount, pScissors);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
+    CALL_VK_API(vkCmdSetLineWidth, commandBuffer, lineWidth);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
+    CALL_VK_API(vkCmdSetDepthBias, commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, const float blendConstants[4]) {
+    CALL_VK_API(vkCmdSetBlendConstants, commandBuffer, blendConstants);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
+    CALL_VK_API(vkCmdSetDepthBounds, commandBuffer, minDepthBounds, maxDepthBounds);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
+    CALL_VK_API(vkCmdSetStencilCompareMask, commandBuffer, faceMask, compareMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
+    CALL_VK_API(vkCmdSetStencilWriteMask, commandBuffer, faceMask, writeMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
+    CALL_VK_API(vkCmdSetStencilReference, commandBuffer, faceMask, reference);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) {
+    CALL_VK_API(vkCmdBindDescriptorSets, commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
+    CALL_VK_API(vkCmdBindIndexBuffer, commandBuffer, buffer, offset, indexType);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) {
+    CALL_VK_API(vkCmdBindVertexBuffers, commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
+    CALL_VK_API(vkCmdDraw, commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
+    CALL_VK_API(vkCmdDrawIndexed, commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+    CALL_VK_API(vkCmdDrawIndirect, commandBuffer, buffer, offset, drawCount, stride);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+    CALL_VK_API(vkCmdDrawIndexedIndirect, commandBuffer, buffer, offset, drawCount, stride);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+    CALL_VK_API(vkCmdDispatch, commandBuffer, groupCountX, groupCountY, groupCountZ);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
+    CALL_VK_API(vkCmdDispatchIndirect, commandBuffer, buffer, offset);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) {
+    CALL_VK_API(vkCmdCopyBuffer, commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) {
+    CALL_VK_API(vkCmdCopyImage, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) {
+    CALL_VK_API(vkCmdBlitImage, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+    CALL_VK_API(vkCmdCopyBufferToImage, commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+    CALL_VK_API(vkCmdCopyImageToBuffer, commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) {
+    CALL_VK_API(vkCmdUpdateBuffer, commandBuffer, dstBuffer, dstOffset, dataSize, pData);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
+    CALL_VK_API(vkCmdFillBuffer, commandBuffer, dstBuffer, dstOffset, size, data);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+    CALL_VK_API(vkCmdClearColorImage, commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+    CALL_VK_API(vkCmdClearDepthStencilImage, commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) {
+    CALL_VK_API(vkCmdClearAttachments, commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) {
+    CALL_VK_API(vkCmdResolveImage, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+    CALL_VK_API(vkCmdSetEvent, commandBuffer, event, stageMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+    CALL_VK_API(vkCmdResetEvent, commandBuffer, event, stageMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+    CALL_VK_API(vkCmdWaitEvents, commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+    CALL_VK_API(vkCmdPipelineBarrier, commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
+    CALL_VK_API(vkCmdBeginQuery, commandBuffer, queryPool, query, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
+    CALL_VK_API(vkCmdEndQuery, commandBuffer, queryPool, query);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+    CALL_VK_API(vkCmdResetQueryPool, commandBuffer, queryPool, firstQuery, queryCount);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
+    CALL_VK_API(vkCmdWriteTimestamp, commandBuffer, pipelineStage, queryPool, query);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
+    CALL_VK_API(vkCmdCopyQueryPoolResults, commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) {
+    CALL_VK_API(vkCmdPushConstants, commandBuffer, layout, stageFlags, offset, size, pValues);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
+    CALL_VK_API(vkCmdBeginRenderPass, commandBuffer, pRenderPassBegin, contents);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
+    CALL_VK_API(vkCmdNextSubpass, commandBuffer, contents);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdEndRenderPass(VkCommandBuffer commandBuffer) {
+    CALL_VK_API(vkCmdEndRenderPass, commandBuffer);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+    CALL_VK_API(vkCmdExecuteCommands, commandBuffer, commandBufferCount, pCommandBuffers);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateAndroidSurfaceKHR(VkInstance instance, const VkAndroidSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+    CALL_VK_API_RETURN(vkCreateAndroidSurfaceKHR, instance, pCreateInfo, pAllocator, pSurface);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroySurfaceKHR, instance, surface, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceSurfaceSupportKHR, physicalDevice, queueFamilyIndex, surface, pSupported);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceSurfaceCapabilitiesKHR, physicalDevice, surface, pSurfaceCapabilities);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceSurfaceFormatsKHR, physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceSurfacePresentModesKHR, physicalDevice, surface, pPresentModeCount, pPresentModes);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateSwapchainKHR(VkDevice device, const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
+    CALL_VK_API_RETURN(vkCreateSwapchainKHR, device, pCreateInfo, pAllocator, pSwapchain);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroySwapchainKHR, device, swapchain, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
+    CALL_VK_API_RETURN(vkGetSwapchainImagesKHR, device, swapchain, pSwapchainImageCount, pSwapchainImages);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkAcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) {
+    CALL_VK_API_RETURN(vkAcquireNextImageKHR, device, swapchain, timeout, semaphore, fence, pImageIndex);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkQueuePresentKHR(VkQueue queue, const VkPresentInfoKHR* pPresentInfo) {
+    CALL_VK_API_RETURN(vkQueuePresentKHR, queue, pPresentInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
+    CALL_VK_API(vkGetPhysicalDeviceFeatures2, physicalDevice, pFeatures);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceProperties2, physicalDevice, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceFormatProperties2(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceFormatProperties2, physicalDevice, format, pFormatProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceImageFormatProperties2(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceImageFormatProperties2, physicalDevice, pImageFormatInfo, pImageFormatProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceQueueFamilyProperties2(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceQueueFamilyProperties2, physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceMemoryProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceMemoryProperties2, physicalDevice, pMemoryProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceSparseImageFormatProperties2(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceSparseImageFormatProperties2, physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkTrimCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+    CALL_VK_API(vkTrimCommandPool, device, commandPool, flags);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceExternalBufferProperties(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceExternalBufferProperties, physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceExternalSemaphoreProperties(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceExternalSemaphoreProperties, physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPhysicalDeviceExternalFenceProperties(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
+    CALL_VK_API(vkGetPhysicalDeviceExternalFenceProperties, physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkEnumeratePhysicalDeviceGroups(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
+    CALL_VK_API_RETURN(vkEnumeratePhysicalDeviceGroups, instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceGroupPeerMemoryFeatures(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+    CALL_VK_API(vkGetDeviceGroupPeerMemoryFeatures, device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkBindBufferMemory2(VkDevice device, uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) {
+    CALL_VK_API_RETURN(vkBindBufferMemory2, device, bindInfoCount, pBindInfos);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkBindImageMemory2(VkDevice device, uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) {
+    CALL_VK_API_RETURN(vkBindImageMemory2, device, bindInfoCount, pBindInfos);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+    CALL_VK_API(vkCmdSetDeviceMask, commandBuffer, deviceMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetDeviceGroupPresentCapabilitiesKHR(VkDevice device, VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
+    CALL_VK_API_RETURN(vkGetDeviceGroupPresentCapabilitiesKHR, device, pDeviceGroupPresentCapabilities);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetDeviceGroupSurfacePresentModesKHR(VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+    CALL_VK_API_RETURN(vkGetDeviceGroupSurfacePresentModesKHR, device, surface, pModes);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkAcquireNextImage2KHR(VkDevice device, const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
+    CALL_VK_API_RETURN(vkAcquireNextImage2KHR, device, pAcquireInfo, pImageIndex);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+    CALL_VK_API(vkCmdDispatchBase, commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDevicePresentRectanglesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pRectCount, VkRect2D* pRects) {
+    CALL_VK_API_RETURN(vkGetPhysicalDevicePresentRectanglesKHR, physicalDevice, surface, pRectCount, pRects);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateDescriptorUpdateTemplate(VkDevice device, const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+    CALL_VK_API_RETURN(vkCreateDescriptorUpdateTemplate, device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyDescriptorUpdateTemplate, device, descriptorUpdateTemplate, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkUpdateDescriptorSetWithTemplate(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) {
+    CALL_VK_API(vkUpdateDescriptorSetWithTemplate, device, descriptorSet, descriptorUpdateTemplate, pData);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetBufferMemoryRequirements2(VkDevice device, const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    CALL_VK_API(vkGetBufferMemoryRequirements2, device, pInfo, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetImageMemoryRequirements2(VkDevice device, const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    CALL_VK_API(vkGetImageMemoryRequirements2, device, pInfo, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetImageSparseMemoryRequirements2(VkDevice device, const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+    CALL_VK_API(vkGetImageSparseMemoryRequirements2, device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceBufferMemoryRequirements(VkDevice device, const VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    CALL_VK_API(vkGetDeviceBufferMemoryRequirements, device, pInfo, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceImageMemoryRequirements(VkDevice device, const VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    CALL_VK_API(vkGetDeviceImageMemoryRequirements, device, pInfo, pMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceImageSparseMemoryRequirements(VkDevice device, const VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+    CALL_VK_API(vkGetDeviceImageSparseMemoryRequirements, device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateSamplerYcbcrConversion(VkDevice device, const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+    CALL_VK_API_RETURN(vkCreateSamplerYcbcrConversion, device, pCreateInfo, pAllocator, pYcbcrConversion);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroySamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroySamplerYcbcrConversion, device, ycbcrConversion, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDeviceQueue2(VkDevice device, const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
+    CALL_VK_API(vkGetDeviceQueue2, device, pQueueInfo, pQueue);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetDescriptorSetLayoutSupport(VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+    CALL_VK_API(vkGetDescriptorSetLayoutSupport, device, pCreateInfo, pSupport);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreateRenderPass2(VkDevice device, const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+    CALL_VK_API_RETURN(vkCreateRenderPass2, device, pCreateInfo, pAllocator, pRenderPass);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) {
+    CALL_VK_API(vkCmdBeginRenderPass2, commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) {
+    CALL_VK_API(vkCmdNextSubpass2, commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) {
+    CALL_VK_API(vkCmdEndRenderPass2, commandBuffer, pSubpassEndInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetSemaphoreCounterValue(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
+    CALL_VK_API_RETURN(vkGetSemaphoreCounterValue, device, semaphore, pValue);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkWaitSemaphores(VkDevice device, const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+    CALL_VK_API_RETURN(vkWaitSemaphores, device, pWaitInfo, timeout);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkSignalSemaphore(VkDevice device, const VkSemaphoreSignalInfo* pSignalInfo) {
+    CALL_VK_API_RETURN(vkSignalSemaphore, device, pSignalInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetAndroidHardwareBufferPropertiesANDROID(VkDevice device, const struct AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) {
+    CALL_VK_API_RETURN(vkGetAndroidHardwareBufferPropertiesANDROID, device, buffer, pProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetMemoryAndroidHardwareBufferANDROID(VkDevice device, const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, struct AHardwareBuffer** pBuffer) {
+    CALL_VK_API_RETURN(vkGetMemoryAndroidHardwareBufferANDROID, device, pInfo, pBuffer);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+    CALL_VK_API(vkCmdDrawIndirectCount, commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+    CALL_VK_API(vkCmdDrawIndexedIndirectCount, commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR uint64_t vkGetBufferOpaqueCaptureAddress(VkDevice device, const VkBufferDeviceAddressInfo* pInfo) {
+    CALL_VK_API_RETURN(vkGetBufferOpaqueCaptureAddress, device, pInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkDeviceAddress vkGetBufferDeviceAddress(VkDevice device, const VkBufferDeviceAddressInfo* pInfo) {
+    CALL_VK_API_RETURN(vkGetBufferDeviceAddress, device, pInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR uint64_t vkGetDeviceMemoryOpaqueCaptureAddress(VkDevice device, const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+    CALL_VK_API_RETURN(vkGetDeviceMemoryOpaqueCaptureAddress, device, pInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkGetPhysicalDeviceToolProperties(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
+    CALL_VK_API_RETURN(vkGetPhysicalDeviceToolProperties, physicalDevice, pToolCount, pToolProperties);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetCullMode(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
+    CALL_VK_API(vkCmdSetCullMode, commandBuffer, cullMode);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetFrontFace(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
+    CALL_VK_API(vkCmdSetFrontFace, commandBuffer, frontFace);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetPrimitiveTopology(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
+    CALL_VK_API(vkCmdSetPrimitiveTopology, commandBuffer, primitiveTopology);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetViewportWithCount(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) {
+    CALL_VK_API(vkCmdSetViewportWithCount, commandBuffer, viewportCount, pViewports);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetScissorWithCount(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) {
+    CALL_VK_API(vkCmdSetScissorWithCount, commandBuffer, scissorCount, pScissors);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBindVertexBuffers2(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) {
+    CALL_VK_API(vkCmdBindVertexBuffers2, commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
+    CALL_VK_API(vkCmdSetDepthTestEnable, commandBuffer, depthTestEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthWriteEnable(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
+    CALL_VK_API(vkCmdSetDepthWriteEnable, commandBuffer, depthWriteEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthCompareOp(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
+    CALL_VK_API(vkCmdSetDepthCompareOp, commandBuffer, depthCompareOp);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthBoundsTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
+    CALL_VK_API(vkCmdSetDepthBoundsTestEnable, commandBuffer, depthBoundsTestEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetStencilTestEnable(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
+    CALL_VK_API(vkCmdSetStencilTestEnable, commandBuffer, stencilTestEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetStencilOp(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
+    CALL_VK_API(vkCmdSetStencilOp, commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetRasterizerDiscardEnable(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
+    CALL_VK_API(vkCmdSetRasterizerDiscardEnable, commandBuffer, rasterizerDiscardEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetDepthBiasEnable(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
+    CALL_VK_API(vkCmdSetDepthBiasEnable, commandBuffer, depthBiasEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetPrimitiveRestartEnable(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
+    CALL_VK_API(vkCmdSetPrimitiveRestartEnable, commandBuffer, primitiveRestartEnable);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkCreatePrivateDataSlot(VkDevice device, const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
+    CALL_VK_API_RETURN(vkCreatePrivateDataSlot, device, pCreateInfo, pAllocator, pPrivateDataSlot);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkDestroyPrivateDataSlot(VkDevice device, VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator) {
+    CALL_VK_API(vkDestroyPrivateDataSlot, device, privateDataSlot, pAllocator);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkSetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
+    CALL_VK_API_RETURN(vkSetPrivateData, device, objectType, objectHandle, privateDataSlot, data);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkGetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
+    CALL_VK_API(vkGetPrivateData, device, objectType, objectHandle, privateDataSlot, pData);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyBuffer2(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2* pCopyBufferInfo) {
+    CALL_VK_API(vkCmdCopyBuffer2, commandBuffer, pCopyBufferInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyImage2(VkCommandBuffer commandBuffer, const VkCopyImageInfo2* pCopyImageInfo) {
+    CALL_VK_API(vkCmdCopyImage2, commandBuffer, pCopyImageInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBlitImage2(VkCommandBuffer commandBuffer, const VkBlitImageInfo2* pBlitImageInfo) {
+    CALL_VK_API(vkCmdBlitImage2, commandBuffer, pBlitImageInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyBufferToImage2(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
+    CALL_VK_API(vkCmdCopyBufferToImage2, commandBuffer, pCopyBufferToImageInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
+    CALL_VK_API(vkCmdCopyImageToBuffer2, commandBuffer, pCopyImageToBufferInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdResolveImage2(VkCommandBuffer commandBuffer, const VkResolveImageInfo2* pResolveImageInfo) {
+    CALL_VK_API(vkCmdResolveImage2, commandBuffer, pResolveImageInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfo* pDependencyInfo) {
+    CALL_VK_API(vkCmdSetEvent2, commandBuffer, event, pDependencyInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
+    CALL_VK_API(vkCmdResetEvent2, commandBuffer, event, stageMask);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfo* pDependencyInfos) {
+    CALL_VK_API(vkCmdWaitEvents2, commandBuffer, eventCount, pEvents, pDependencyInfos);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdPipelineBarrier2(VkCommandBuffer commandBuffer, const VkDependencyInfo* pDependencyInfo) {
+    CALL_VK_API(vkCmdPipelineBarrier2, commandBuffer, pDependencyInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR VkResult vkQueueSubmit2(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2* pSubmits, VkFence fence) {
+    CALL_VK_API_RETURN(vkQueueSubmit2, queue, submitCount, pSubmits, fence);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
+    CALL_VK_API(vkCmdWriteTimestamp2, commandBuffer, stage, queryPool, query);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdBeginRendering(VkCommandBuffer commandBuffer, const VkRenderingInfo* pRenderingInfo) {
+    CALL_VK_API(vkCmdBeginRendering, commandBuffer, pRenderingInfo);
+}
+
+__attribute__((visibility("default")))
+VKAPI_ATTR void vkCmdEndRendering(VkCommandBuffer commandBuffer) {
+    CALL_VK_API(vkCmdEndRendering, commandBuffer);
+}

@@ -17,6 +17,7 @@ endif()
 
 target_link_libraries(gralloc PUBLIC
     utils_common
+    cutils      # stub
     hardware    # stub
 
     dl)

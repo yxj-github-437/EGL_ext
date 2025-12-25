@@ -10,8 +10,6 @@ add_library(hardware SHARED
 target_include_directories(hardware PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(cutils SHARED
-    src/native_handle.c
-    src/cutils_stub.c)
-target_include_directories(cutils PUBLIC
+add_library(cutils INTERFACE)
+target_include_directories(cutils INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -53,6 +53,8 @@ target_compile_options(GLESv2 PRIVATE
 target_compile_definitions(GLESv2 PRIVATE
     GL_GLEXT_PROTOTYPES)
 
+add_subdirectory(libGL)
+
 add_executable(egl_test test.cc)
 target_link_libraries(egl_test PUBLIC EGL GLESv2)
 

@@ -1,0 +1,11 @@
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+tab_width = 8
+
+[*.h]
+indent_style = space
+indent_size = 4
+max_line_length = 78

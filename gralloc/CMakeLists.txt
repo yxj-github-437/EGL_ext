@@ -12,7 +12,7 @@ target_include_directories(gralloc PUBLIC
 
 if (WITH_HYBRIS)
     target_compile_definitions(gralloc PUBLIC __HYBRIS__)
-    target_link_libraries(gralloc PUBLIC hybris-common)
+    target_link_libraries(gralloc PUBLIC hybris-common android-properties)
 endif()
 
 target_link_libraries(gralloc PUBLIC

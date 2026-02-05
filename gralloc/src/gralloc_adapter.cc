@@ -61,7 +61,8 @@ gralloc_loader::loader()
         adapter = std::make_shared<gralloc_nativewindow>(nativewindow_handle);
         backend = backend_type::gralloc_nativewindow;
     }
-    else if (hw_get_module(GRALLOC_HARDWARE_MODULE_ID, &gralloc_module) == 0)
+    else if (hardware.vptr.hw_get_module(GRALLOC_HARDWARE_MODULE_ID,
+                                         &gralloc_module) == 0)
     {
         adapter = std::make_shared<gralloc_libhareware>(gralloc_module);
         backend = backend_type::gralloc_libhardware;
@@ -109,7 +110,37 @@ gralloc_adapter_t::cutils_loader::cutils_loader() noexcept :
     GETVPTRFUNC(vptr, native_handle_clone);
     GETVPTRFUNC(vptr, native_handle_delete);
 }
+
 gralloc_adapter_t::cutils_loader::~cutils_loader() noexcept
+{
+    memset(&vptr, 0, sizeof(vptr));
+    if (!handle)
+        return;
+    dlclose(handle);
+}
+
+gralloc_adapter_t::hardware_loader::hardware_loader() noexcept :
+    handle(dlopen("libhardware.so", RTLD_NOW))
+{
+    GETVPTRFUNC(vptr, hw_get_module);
+    GETVPTRFUNC(vptr, hw_get_module_by_class);
+}
+
+gralloc_adapter_t::hardware_loader::~hardware_loader() noexcept
+{
+    memset(&vptr, 0, sizeof(vptr));
+    if (!handle)
+        return;
+    dlclose(handle);
+}
+
+gralloc_adapter_t::sync_loader::sync_loader() noexcept :
+    handle(dlopen("libsync.so", RTLD_NOW))
+{
+    GETVPTRFUNC(vptr, sync_wait);
+}
+
+gralloc_adapter_t::sync_loader::~sync_loader() noexcept
 {
     memset(&vptr, 0, sizeof(vptr));
     if (!handle)

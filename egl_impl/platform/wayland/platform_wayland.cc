@@ -328,7 +328,8 @@ int WaylandNativeWindow::queueBuffer(BaseNativeWindowBuffer* buffer,
     std::lock_guard lock{m_mutex};
     if (fenceFd >= 0)
     {
-        sync_wait(fenceFd, -1);
+        auto adapter = gralloc_loader::getInstance().get_adapter();
+        adapter->sync.vptr.sync_wait(fenceFd, -1);
         close(fenceFd);
     }
     return NO_ERROR;

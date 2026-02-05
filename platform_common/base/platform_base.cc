@@ -1,5 +1,6 @@
 #include "platform_base.h"
 #include "logger.h"
+#include "gralloc_adapter.h"
 
 #include <stdarg.h>
 #include <sync/sync.h>
@@ -93,7 +94,8 @@ BaseNativeWindow::BaseNativeWindow()
 
         *buffer = new_buffer;
         if (fenceFd != -1) {
-            sync_wait(fenceFd, -1);
+            auto adapter = gralloc_loader::getInstance().get_adapter();
+            adapter->sync.vptr.sync_wait(fenceFd, -1);
             close(fenceFd);
         }
 

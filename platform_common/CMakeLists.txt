@@ -12,6 +12,7 @@ set_target_properties(platform_common PROPERTIES POSITION_INDEPENDENT_CODE ON
 target_include_directories(platform_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../)
 target_link_libraries(platform_common PUBLIC
+    gralloc
     cutils      # stub
     utils_common)
 

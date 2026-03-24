@@ -118,7 +118,7 @@ logger::log_t::~log_t()
 
     std::lock_guard _l{mutex};
 #ifdef __ANDROID__
-    if (getenv("RUN_IN_ANDROID"))
+    if (!isatty(STDOUT_FILENO) || !isatty(STDERR_FILENO))
         __android_log_write(prio_cast(prio), LOG_TAG, stream.c_str());
     else
 #endif

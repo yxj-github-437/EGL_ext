@@ -12,6 +12,7 @@
 #include <memory>
 #include <map>
 #include <mutex>
+#include <shared_mutex>
 
 using namespace egl_wrapper;
 

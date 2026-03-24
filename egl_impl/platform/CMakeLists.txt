@@ -1,5 +1,6 @@
 add_library(egl_platform)
 target_sources(egl_platform PRIVATE
+    egl_display.cc
 #    egl_object.cc
 #    egl_platform_entries.cc
     egl_tls.cc)

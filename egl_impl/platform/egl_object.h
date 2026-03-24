@@ -1,5 +1,5 @@
-#ifndef ANDROID_EGL_DISPLAY_H
-#define ANDROID_EGL_DISPLAY_H
+#ifndef ANDROID_EGL_OBJECT_H
+#define ANDROID_EGL_OBJECT_H
 
 #include <EGL/egl.h>
 #include <string>
@@ -7,9 +7,27 @@
 
 #include "platform/platform.h"
 
+namespace egl_wrapper {
+
+enum class egl_object_type : uint8_t {
+    CONTEXT,
+    SURFACE,
+};
+
 class egl_object_t {
+    egl_object_type type;
+
   public:
     ~egl_object_t() = default;
+
+    friend bool is_context(const egl_object_t& obj) noexcept
+    {
+        return obj.type == egl_object_type::CONTEXT;
+    }
+    friend bool is_surface(const egl_object_t& obj) noexcept
+    {
+        return obj.type == egl_object_type::SURFACE;
+    }
 };
 
 class egl_display_t {
@@ -50,17 +68,21 @@ class egl_context_t : public egl_object_t {
     ~egl_context_t() = default;
 
     static EGLContext createNativeContext(EGLDisplay dpy, EGLConfig config,
-        EGLContext share_list,
-        const EGLint* attrib_list);
+                                          EGLContext share_list,
+                                          const EGLint* attrib_list);
     void makeCurrent(EGLSurface draw, EGLSurface read);
     static EGLBoolean destroy(EGLDisplay dpy, EGLContext ctx);
 
     static egl_context_t* get(EGLContext ctx);
+
+    friend bool is_context(const egl_context_t& ctx) noexcept { return true; }
+    friend bool is_surface(const egl_context_t& ctx) noexcept { return false; }
 };
 
 inline egl_display_t* get_display(EGLDisplay dpy)
 {
     return egl_display_t::get(dpy);
 }
+} // namespace egl_wrapper
 
 #endif

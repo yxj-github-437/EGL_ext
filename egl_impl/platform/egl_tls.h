@@ -8,13 +8,19 @@
 namespace egl_wrapper {
 class egl_tls_t {
     EGLint error = EGL_SUCCESS;
+    EGLenum currentAPI = EGL_OPENGL_ES_API;
+    const gl_hooks_t* hooks = nullptr;
 
   public:
-    static void clearError();
-    static EGLint getError();
-    static void setErrorImpl(EGLint);
+    static void clearError() noexcept;
+    static EGLint getError() noexcept;
+    static EGLenum getCurrentAPI() noexcept;
+    static void setErrorImpl(EGLint) noexcept;
 
-    static void clearTLS();
+    static void setGlHooks(gl_hooks_t const* value) noexcept;
+    static const gl_hooks_t* getGlHooks() noexcept;
+
+    static void clearTLS() noexcept;
 };
 
 #define setError(_e, _r)                                                       \

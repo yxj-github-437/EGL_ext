@@ -7,9 +7,8 @@
 #include <memory>
 
 namespace egl_wrapper {
-class egl_system_t {
-    egl_system_t();
-    friend class loader;
+class egl_vendor_t {
+    egl_vendor_t();
 
   public:
     enum { GLESv1_INDEX = 0, GLESv2_INDEX = 1 };
@@ -21,35 +20,32 @@ class egl_system_t {
     platform_impl_t platform;
 
     class loader {
-        using getProcAddressType =
-            __eglMustCastToProperFunctionPointerType (*)(const char*);
+        void* vndk_support_handle;
 
-        getProcAddressType getProcAddress;
+        decltype(&dlopen) load_library;
+        decltype(&dlclose) unload_library;
 
-#ifndef __HYBRIS__
-        utils::systemlib_loader systemloader;
-#endif
+        bool is_GLES_driver;
+        void* dso[3];
+        PFNEGLGETPROCADDRESSPROC getProcAddress;
 
         loader();
-
-        void init_libegl_api();
-        void init_libgles_api();
-
-      public:
-        static loader& getInstance();
-        ~loader();
-
         loader(const loader&) = delete;
         loader& operator=(const loader&) = delete;
 
-        void* libEgl;
-        void* libGles1;
-        void* libGles2;
-        std::shared_ptr<egl_system_t> system;
+        void try_load_driver(const std::string& driver_suffix, bool exact);
+        void load_egl_driver();
+
+        void load_egl_api();
+        void load_gles_api();
+
+      public:
+        static loader& getInstance();
+        ~loader() noexcept;
+
+        std::unique_ptr<egl_vendor_t> egl_vendor;
     };
 };
-
-EGLAPI std::shared_ptr<egl_system_t> egl_get_system();
 } // namespace egl_wrapper
 
 #endif // LOADER_H_

@@ -17,7 +17,7 @@
 
 namespace utils {
 template <class T>
-T gen_env_option(const char* env_key, std::map<std::string, T> options,
+T gen_env_option(const char* env_key, const std::map<std::string, T>& options,
                  T default_option = {})
 {
     if (auto env = getenv(env_key); env)

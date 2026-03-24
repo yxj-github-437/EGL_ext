@@ -7,7 +7,7 @@ set_target_properties(EGL PROPERTIES SUFFIX ".so.1"
     POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(EGL PRIVATE
     egl_loader
-    egl_platform
+#    egl_platform
 
     gralloc
     sync
@@ -19,6 +19,7 @@ target_compile_definitions(EGL PRIVATE
     EGL_EGLEXT_PROTOTYPES
     GL_GLEXT_PROTOTYPES)
 
+#[[
 add_library(GLESv1_CM SHARED
     libGLESv1_CM/gl.cc)
 set_target_properties(GLESv1_CM PROPERTIES SUFFIX ".so.1"
@@ -62,3 +63,4 @@ target_link_libraries(egl_fbo_pbo_test PUBLIC EGL GLESv2)
 
 add_executable(egl_fbo_rbo_test fbo_rbo_test.cc)
 target_link_libraries(egl_fbo_rbo_test PUBLIC EGL GLESv2)
+]]

@@ -1,7 +1,7 @@
 add_library(egl_platform)
 target_sources(egl_platform PRIVATE
-    egl_object.cc
-    egl_platform_entries.cc
+#    egl_object.cc
+#    egl_platform_entries.cc
     egl_tls.cc)
 target_include_directories(egl_platform PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

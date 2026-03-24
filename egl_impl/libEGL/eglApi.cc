@@ -22,6 +22,11 @@
 
 using namespace egl_wrapper;
 
+namespace {
+auto& loader = egl_vendor_t::loader::getInstance();
+}
+
+#if 0
 EGLDisplay eglGetDisplay(EGLNativeDisplayType display)
 {
     // Call down the chain, which usually points directly to the impl
@@ -327,3 +332,4 @@ EGLBoolean eglWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     auto system = egl_system_t::loader::getInstance().system;
     return system->platform.eglWaitSync(dpy, sync, flags);
 }
+#endif

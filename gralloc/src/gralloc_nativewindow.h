@@ -29,8 +29,6 @@ struct nativewindow_vptr {
 };
 // clang-format on
 
-void (*dumpAllocationLog)() = nullptr;
-
 #define GETVPTRFUNC(vptr, func)                                                \
     vptr.func = reinterpret_cast<decltype(vptr.func)>(                         \
         dlsym(nativewindow_handle, #func))
@@ -61,15 +59,10 @@ class gralloc_nativewindow
         GETVPTRFUNC(vptr, AHardwareBuffer_unlock);
         GETVPTRFUNC(vptr, AHardwareBuffer_getNativeHandle);
         GETVPTRFUNC(vptr, AHardwareBuffer_createFromHandle);
-
-        dumpAllocationLog = reinterpret_cast<decltype(dumpAllocationLog)>(
-            dlsym(nativewindow_handle,
-                  "_ZN7android13GraphicBuffer26dumpAllocationsToSystemLogEv"));
     }
     ~gralloc_nativewindow()
     {
         memset(&vptr, 0, sizeof(vptr));
-        dumpAllocationLog = nullptr;
 
         dlclose(nativewindow_handle);
     }
